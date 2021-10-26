@@ -6,4 +6,5 @@ class Protocol {
   static String getAppPermissions = 'getAppPermissions:';
   static String getAppDetail = 'getAppDetail:';
   static String getAppMainActivity = 'getAppMainActivity:';
+  static String openAppByPackage = 'openAppByPackage:';
 }

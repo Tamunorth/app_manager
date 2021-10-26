@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:app_manager/controller/mark_controller.dart';
 import 'package:app_manager/global/global.dart';
@@ -142,13 +143,17 @@ class _AppSettingPageState extends State<AppSettingPage> {
                         //   await Global().exec(
                         //       'am start -n ${widget.apps[0].packageName}/$activityName');
                         // }
-
-                        Global().appChannel.launchActivity(
-                              entity.packageName,
-                              await Global()
-                                  .appChannel
-                                  .getAppMainActivity(entity.packageName),
-                            );
+                        Log.e(Global().appChannel.runtimeType);
+                        AppChannel appChannel = Global().appChannel;
+                        appChannel.openApp(entity.packageName);
+                        // String className = await Global()
+                        //     .appChannel
+                        //     .getAppMainActivity(entity.packageName);
+                        // Log.w(className);
+                        // Global().appChannel.launchActivity(
+                        //       entity.packageName,
+                        //       className,
+                        //     );
                         // Log.w('activityName -> $activityName');
                         // final AndroidIntent intent = AndroidIntent(
                         //   action: 'android.intent.action.MAIN',

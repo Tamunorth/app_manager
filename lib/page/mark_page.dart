@@ -64,13 +64,13 @@ class _MarkPageState extends State<MarkPage> {
                       ),
                     ),
                     NiCardButton(
-                      color: Color(0xffe0e0e0),
+                      color: const Color(0xffe0e0e0),
                       blurRadius: 0,
                       borderRadius: 20.w,
                       onTap: () {
-                        Global()
-                            .appChannel
-                            .launchActivity(mark.package, mark.component);
+                        // Global()
+                        //     .appChannel
+                        //     .launchActivity(mark.package, mark.component);
                       },
                       child: SizedBox(
                         width: 40.w,

@@ -8,9 +8,9 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 
-import com.nightmare.applib.AppChannel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -65,10 +65,10 @@ public class MainActivity extends FlutterActivity {
                     new Thread(() -> {
                         // try catch 一下
                         try {
-                            List<String> arg = stringToList(call.method);
+                            ArrayList<String> args = (ArrayList<String>) call.arguments;
                             Intent intent = new Intent();
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            ComponentName cName = new ComponentName(arg.get(0), arg.get(1));
+                            ComponentName cName = new ComponentName(args.get(0), args.get(1));
                             intent.setComponent(cName);
                             startActivity(intent);
                         } catch (Exception e) {

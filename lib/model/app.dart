@@ -39,6 +39,8 @@ class AppInfo {
     appEntity.targetSdk = other.targetSdk;
     appEntity.versionName = other.versionName;
     appEntity.versionCode = other.versionCode;
+    appEntity.freeze = other.freeze;
+    appEntity.hide = other.hide;
     return appEntity;
   }
 

@@ -27,7 +27,9 @@ Future<void> cacheAllUserIcons(
     return;
   }
   Log.w('缓存全部...');
-
+  Directory('${RuntimeEnvir.filesPath}/AppManager/.icon').createSync(
+    recursive: true,
+  );
   for (int i = 0; i < packages.length; i++) {
     String cachePath =
         '${RuntimeEnvir.filesPath}/AppManager/.icon/${packages[i]}';
@@ -45,88 +47,33 @@ List<String> parsePMOut(String out) {
   return tmp.split('\n');
 }
 
+// 之后有时间把命令行完全换成server
 class AppUtils {
   static Future<List<AppInfo>> getAllAppInfo({
     AppType appType = AppType.user,
     Executable executable,
     AppChannel appChannel,
   }) async {
-    String option = '-3';
+    bool isSystemApp = false;
     if (appType == AppType.system) {
-      option = '-s';
+      isSystemApp = true;
     }
     Log.w('getUserApp');
     //拿到应用软件List
     Stopwatch watch = Stopwatch();
     watch.start();
-    final List<AppInfo> entitys = <AppInfo>[];
-
-    // 获取三方应用 -
-    String defaultAppsResult =
-        await executable.exec('pm list package $option -f -U');
-    Log.e('defaultAppsResult -> $defaultAppsResult');
-    final List<String> defaultAppsList = parsePMOut(defaultAppsResult);
-    // 这个比上面那个显示得更多，多显示被隐藏的app列表
-    String result = await executable.exec('pm list package $option -u -f -U');
-    Log.e('watch -> ${watch.elapsed}');
-    final List<String> resultList = parsePMOut(result);
-    final List<String> packages = [];
-
-    // 这个循环解析出被隐藏的app信息
-    for (int i = 0; i < resultList.length; i++) {
-      String uid = resultList[i].replaceAll(RegExp('.*uid:'), '');
-      String packageName = resultList[i].replaceAll(
-        RegExp('.*=| uid:$uid'),
-        '',
-      );
-      String apkPath = resultList[i].replaceAll('=$packageName uid:$uid', '');
-      packages.add(packageName);
-      bool hide = false;
-      // 如果所有的app里面没有这个app
-      // 说明这个app是被隐藏的
-      if (defaultAppsResult.isNotEmpty &&
-          !defaultAppsList.contains(resultList[i])) {
-        Log.e('packageName -> $packageName ${resultList[i]}');
-        hide = true;
-      }
-      entitys.add(AppInfo(
-        packageName,
-        apkPath: apkPath,
-        uid: uid,
-        hide: hide,
-      ));
-    }
-    // 获取三方被禁用(冻结)的app
-    String disableApp = await executable.exec('pm list package $option -d');
-    List<String> disableAppList;
-    if (disableApp.isNotEmpty) {
-      // 有可能一个冻结的应用都没有
-      disableAppList = parsePMOut(disableApp);
-      Log.e('disableApp -> $disableAppList');
-    }
-    for (int i = 0; i < disableAppList.length; i++) {
-      String packageName = disableAppList[i];
-
-      try {
-        // 如果
-        AppInfo entity =
-            entitys.firstWhere((element) => element.packageName == packageName);
-        Log.w('entity -> $entity');
-        entity.freeze = true;
-      } catch (e) {
-        // pass
-      }
-    }
-    final List<AppInfo> infos = await appChannel.getAppInfo(packages);
-    if (infos.isEmpty) {
+    List<AppInfo> entitys = await appChannel.getAllAppInfo(isSystemApp);
+    if (entitys.isEmpty) {
       return [];
     }
-    for (int i = 0; i < infos.length; i++) {
-      entitys[i] = entitys[i].copyWith(infos[i]);
-    }
+    // 排序
     entitys.sort(
       (a, b) => a.appName.toLowerCase().compareTo(b.appName.toLowerCase()),
     );
+    List<String> packages = [];
+    for (AppInfo info in entitys) {
+      packages.add(info.packageName);
+    }
     cacheAllUserIcons(packages, appChannel);
     return entitys;
   }

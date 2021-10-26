@@ -1,4 +1,4 @@
-package com.nightmare.applib;
+package com.nightmare.appmanager;
 
 public class AppChannelProtocol {
     public static final String getIconData = "getIconData:";
@@ -8,4 +8,5 @@ public class AppChannelProtocol {
     public static final String getAppPermissions = "getAppPermissions:";
     public static final String getAppDetail = "getAppDetail:";
     public static final String getAppMainActivity = "getAppMainActivity:";
+    public static final String openAppByPackage = "openAppByPackage:";
 }

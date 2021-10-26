@@ -8,12 +8,11 @@ import 'package:global_repository/global_repository.dart';
 import 'bindings/app_manager_binding.dart';
 import 'global/global.dart';
 import 'page/backup_list_page.dart';
-import 'page/common_app_page.dart';
+import 'modules/app_page/app_list_page.dart';
 import 'page/long_press_dialog.dart';
 import 'controller/app_manager_controller.dart';
 import 'controller/check_controller.dart';
 import 'page/mark_page.dart';
-import 'routes/app_pages.dart';
 
 class AppManagerWithoutMaterialpp extends StatelessWidget {
   const AppManagerWithoutMaterialpp({Key key}) : super(key: key);
@@ -135,12 +134,12 @@ class _AppManagerState extends State<AppManager>
                 child: GetBuilder<AppManagerController>(builder: (ctl) {
                   return SafeArea(
                     child: <Widget>[
-                      CommonAppPage(
+                      AppListPage(
                         key: Key('user'),
                         appList: ctl.userApps,
                         filter: filter.toLowerCase(),
                       ),
-                      CommonAppPage(
+                      AppListPage(
                         key: Key('sys'),
                         appList: ctl.sysApps,
                         filter: filter.toLowerCase(),

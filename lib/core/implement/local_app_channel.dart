@@ -5,17 +5,18 @@ import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
 import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/socket_util.dart';
+import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 
 class LocalAppChannel implements AppChannel {
   int port = 6000;
   @override
-  Future<List<AppInfo>> getAppInfo(List<String> packages) async {
+  Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
     SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
     Log.w('等待连接');
     await manager.connect();
     Log.w('连接成功');
-    manager.sendMsg(Protocol.getAllAppInfo + packages.join(' ') + '\n');
+    manager.sendMsg(Protocol.getAllAppInfo + (isSystemApp ? '1' : '0') + '\n');
     final List<String> infos = (await manager.getString()).split('\n');
     infos.removeLast();
     Log.e('infos -> $infos');
@@ -23,12 +24,16 @@ class LocalAppChannel implements AppChannel {
     for (int i = 0; i < infos.length; i++) {
       List<String> infoList = infos[i].split('\r');
       final AppInfo appInfo = AppInfo(
-        packages[i],
-        appName: infoList[0],
-        minSdk: infoList[1],
-        targetSdk: infoList[2],
-        versionCode: infoList[4],
-        versionName: infoList[3],
+        infoList[0],
+        appName: infoList[1],
+        minSdk: infoList[2],
+        targetSdk: infoList[3],
+        versionCode: infoList[5],
+        versionName: infoList[4],
+        freeze: infoList[6] == 'false',
+        hide: infoList[7] == 'true',
+        uid: infoList[8],
+        apkPath: infoList[9],
       );
       entitys.add(appInfo);
     }
@@ -110,15 +115,6 @@ class LocalAppChannel implements AppChannel {
   }
 
   @override
-  Future<String> getAppMainActivity(String packageName) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
-    manager.sendMsg(Protocol.getAppMainActivity + packageName + '\n');
-    await manager.connect();
-    final String result = (await manager.getString());
-    return result;
-  }
-
-  @override
   Future<bool> clearAppData(String packageName) async {
     String result = await Global().exec('pm clear $packageName');
     return result.isNotEmpty;
@@ -158,21 +154,38 @@ class LocalAppChannel implements AppChannel {
   }
 
   @override
-  Future<void> launchActivity(
-    String packageName,
-    String activity,
-  ) async {
-    // if (runOnPackage()) {
-    //   await Global().exec('am start -n $packageName/$activity');
-    //   return;
-    // }
-    // const MethodChannel jump = MethodChannel('jump');
-    // jump.invokeMethod(
-    //   [
-    //     packageName,
-    //     activity,
-    //   ].join('\n'),
-    // );
+  Future<String> getAppMainActivity(String packageName) async {
+    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    await manager.connect();
+    manager.sendMsg(Protocol.getAppMainActivity + packageName + '\n');
+    final String result = (await manager.getString());
+    Log.e('getAppMainActivity $result');
+    return result;
+  }
+
+  // @override
+  // Future<void> launchActivity(
+  //   String packageName,
+  //   String activity,
+  // ) async {
+  //   const MethodChannel channel = MethodChannel('app_manager');
+  //   channel.invokeMethod(
+  //     'openActivity',
+  //     [
+  //       packageName,
+  //       activity,
+  //     ],
+  //   );
+  // }
+
+  @override
+  Future<void> openApp(String packageName) async {
+    Log.e('openApp $packageName');
+    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    // Log.w('等待连接');
+    await manager.connect();
+    // Log.w('连接成功');
+    manager.sendMsg(Protocol.openAppByPackage + packageName + '\n');
   }
 
   @override

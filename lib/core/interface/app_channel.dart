@@ -2,7 +2,7 @@
 import 'package:app_manager/model/app.dart';
 
 abstract class AppChannel {
-  Future<List<AppInfo>> getAppInfo(List<String> packages);
+  Future<List<AppInfo>> getAllAppInfo(bool isSystemApp);
 
   Future<String> getAppDetails(String package);
 
@@ -11,7 +11,7 @@ abstract class AppChannel {
   Future<List<String>> getAppPermission(String package);
 
   Future<List<int>> getAppIconBytes(String packageName);
-  
+
   Future<List<List<int>>> getAllAppIconBytes(List<String> packages);
 
   Future<String> getAppMainActivity(String packageName);
@@ -28,10 +28,6 @@ abstract class AppChannel {
 
   Future<bool> unInstallApp(String packageName);
 
-  Future<void> launchActivity(
-    String packageName,
-    String activity,
-  );
-
   Future<String> getFileSize(String path);
+  Future<void> openApp(String packageName);
 }
