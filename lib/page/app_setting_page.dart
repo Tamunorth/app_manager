@@ -4,13 +4,13 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:app_manager/controller/mark_controller.dart';
+import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
 import 'package:app_manager/model/app.dart';
 import 'package:app_manager/controller/app_manager_controller.dart';
 import 'package:app_manager/model/app_details.dart';
 import 'package:app_manager/model/mark.dart';
 import 'package:app_manager/theme/app_colors.dart';
-import 'package:app_manager/utils/app_utils.dart';
 import 'package:app_manager/utils/plugin_utils.dart';
 import 'package:app_manager/utils/route_extension.dart';
 import 'package:app_manager/widgets/app_icon_header.dart';
@@ -21,7 +21,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:path/path.dart' as path;
-import 'package:shortcut/shortcut.dart';
 
 import 'backup_sheet.dart';
 

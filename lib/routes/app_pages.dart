@@ -10,7 +10,7 @@ abstract class AppPages {
     GetPage(
       name: AppManagerRoutes.home,
       page: () {
-        return AppManager();
+        return AppManagerEntryPoint();
       },
       binding: AppManagerBinding(),
     ),

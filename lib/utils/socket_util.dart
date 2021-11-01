@@ -6,6 +6,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:global_repository/global_repository.dart';
 
+class SocketStatus {
+  static String timeOut = 'time out';
+}
+
 class SocketWrapper {
   SocketWrapper(this.address, this.port);
   final dynamic address;
@@ -21,14 +25,14 @@ class SocketWrapper {
         address,
         port,
         timeout: const Duration(
-          seconds: 3,
+          milliseconds: 100,
         ),
       );
       mStream = socket.asBroadcastStream();
       return true;
     } catch (e) {
       debugPrint('连接socket出现异常，e=${e.toString()}');
-      return false;
+      rethrow;
     }
   }
 
@@ -62,7 +66,6 @@ class SocketWrapper {
       tmp.addAll(event);
       // Log.e(event);
     }, onDone: () {
-      // Log.w('stream down');
       completer.complete(tmp);
     });
     return completer.future;
@@ -76,6 +79,11 @@ class SocketWrapper {
     }, onDone: () {
       // Log.w('stream down');
       completer.complete(utf8.decode(tmp));
+    });
+    Future.delayed(const Duration(seconds: 100), () {
+      if (!completer.isCompleted) {
+        completer.complete();
+      }
     });
     return completer.future;
   }

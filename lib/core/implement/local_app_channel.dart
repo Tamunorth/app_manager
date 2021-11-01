@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/core/foundation/protocol.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
@@ -7,18 +8,26 @@ import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/socket_util.dart';
 import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:apputils/apputils.dart';
 
 class LocalAppChannel implements AppChannel {
-  int port = 6000;
+  Future<int> getPort() async {
+    if (port != null) {
+      Log.e('port -> $port');
+      return port;
+    }
+    return port = await AppServerUtils.port;
+  }
+
   @override
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     Log.w('等待连接');
     await manager.connect();
     Log.w('连接成功');
     manager.sendMsg(Protocol.getAllAppInfo + (isSystemApp ? '1' : '0') + '\n');
     final List<String> infos = (await manager.getString()).split('\n');
-    infos.removeLast();
     Log.e('infos -> $infos');
     final List<AppInfo> entitys = <AppInfo>[];
     for (int i = 0; i < infos.length; i++) {
@@ -42,7 +51,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<String> getAppDetails(String package) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     // Log.w('等待连接');
     await manager.connect();
     // Log.w('连接成功');
@@ -53,7 +63,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<String>> getAppActivitys(String package) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     // Log.w('等待连接');
     await manager.connect();
     // Log.w('连接成功');
@@ -65,7 +76,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<String>> getAppPermission(String package) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     // Log.w('等待连接');
     await manager.connect();
     // Log.w('连接成功');
@@ -77,7 +89,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<int>> getAppIconBytes(String packageName) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     await manager.connect();
     manager.sendMsg(Protocol.getIconData + '$packageName\n');
     List<int> result = await manager.getResult();
@@ -87,7 +100,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<List<int>>> getAllAppIconBytes(List<String> packages) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     await manager.connect();
     manager.sendMsg(Protocol.getAllIconData + packages.join(' ') + '\n');
     List<int> allBytes = await manager.getResult();
@@ -155,7 +169,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<String> getAppMainActivity(String packageName) async {
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     await manager.connect();
     manager.sendMsg(Protocol.getAppMainActivity + packageName + '\n');
     final String result = (await manager.getString());
@@ -181,7 +196,8 @@ class LocalAppChannel implements AppChannel {
   @override
   Future<void> openApp(String packageName) async {
     Log.e('openApp $packageName');
-    SocketWrapper manager = SocketWrapper(InternetAddress.anyIPv4, port);
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
     // Log.w('等待连接');
     await manager.connect();
     // Log.w('连接成功');
@@ -191,5 +207,37 @@ class LocalAppChannel implements AppChannel {
   @override
   Future<String> getFileSize(String path) async {
     return await Global().exec('stat -c "%s" $path');
+  }
+
+  @override
+  int port;
+
+  @override
+  Future<List<AppInfo>> getAppInfos(List<String> packages) async {
+    SocketWrapper manager =
+        SocketWrapper(InternetAddress.anyIPv4, await getPort());
+    Log.w('等待连接');
+    await manager.connect();
+    Log.w('连接成功');
+    manager.sendMsg(Protocol.getAppInfos + packages.join(' ') + '\n');
+    final List<String> infos = (await manager.getString()).split('\n');
+    final List<AppInfo> entitys = <AppInfo>[];
+    for (int i = 0; i < infos.length; i++) {
+      List<String> infoList = infos[i].split('\r');
+      final AppInfo appInfo = AppInfo(
+        infoList[0],
+        appName: infoList[1],
+        minSdk: infoList[2],
+        targetSdk: infoList[3],
+        versionCode: infoList[5],
+        versionName: infoList[4],
+        freeze: infoList[6] == 'false',
+        hide: infoList[7] == 'true',
+        uid: infoList[8],
+        apkPath: infoList[9],
+      );
+      entitys.add(appInfo);
+    }
+    return entitys;
   }
 }

@@ -4,11 +4,11 @@ import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/config.dart';
 import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/socket_util.dart';
+import 'package:apputils/apputils.dart';
 import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 
 const MethodChannel _channel = MethodChannel('app_manager');
-int port = 6000;
 enum AppType {
   user,
   system,
@@ -47,7 +47,7 @@ List<String> parsePMOut(String out) {
   return tmp.split('\n');
 }
 
-// 之后有时间把命令行完全换成server
+// 这个类，file_selector会用
 class AppUtils {
   static Future<List<AppInfo>> getAllAppInfo({
     AppType appType = AppType.user,

@@ -1,8 +1,14 @@
 // app相关的抽象
+
+
 import 'package:app_manager/model/app.dart';
 
 abstract class AppChannel {
+  int port;
+  
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp);
+  
+  Future<List<AppInfo>> getAppInfos(List<String> packages);
 
   Future<String> getAppDetails(String package);
 

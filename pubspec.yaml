@@ -19,6 +19,14 @@ dependencies:
     git: https://github.com/nightmare-space/global_repository
   flutter_svg: ^0.22.0
   hive: ^2.0.4
+  apputils:
+    path: /Users/nightmare/Desktop/nightmare-space/apputils
+  termare_pty:
+    git: https://github.com/Termare/termare_pty
+  adbutil:
+    git: https://github.com/nightmare-space/adbutil
+  pseudo_terminal_utils:
+    git: https://github.com/Termare/pseudo_terminal_utils
   
 dev_dependencies:
   flutter_test:

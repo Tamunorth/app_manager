@@ -23,8 +23,8 @@ class AppManagerWithoutMaterialpp extends StatelessWidget {
   }
 }
 
-class AppManager extends StatefulWidget {
-  AppManager({Key key, this.process}) : super(key: key) {
+class AppManagerEntryPoint extends StatefulWidget {
+  AppManagerEntryPoint({Key key, this.process}) : super(key: key) {
     if (process != null) {
       Global().process = process;
     } else {
@@ -35,14 +35,15 @@ class AppManager extends StatefulWidget {
     if (Get.arguments != null) {
       Global().process = Get.arguments;
     }
+    // 避免没有注册到依赖
     AppManagerBinding().dependencies();
   }
   final Executable process;
   @override
-  _AppManagerState createState() => _AppManagerState();
+  _AppManagerEntryPointState createState() => _AppManagerEntryPointState();
 }
 
-class _AppManagerState extends State<AppManager>
+class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
     with SingleTickerProviderStateMixin {
   int _currentIndex = 0;
   String filter = '';
