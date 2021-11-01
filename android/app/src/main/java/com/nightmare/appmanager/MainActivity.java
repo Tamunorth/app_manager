@@ -10,6 +10,7 @@ import androidx.core.content.FileProvider;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,13 +28,6 @@ public class MainActivity extends FlutterActivity {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
         new Thread(() -> {
             initPlugin(flutterEngine);
-        }).start();
-        new Thread(() -> {
-            try {
-                AppChannel.startServer(getApplicationContext());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }).start();
     }
 
