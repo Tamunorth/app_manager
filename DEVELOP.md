@@ -1,7 +1,10 @@
-## App信息获取
+## 对外暴露的方法
+此项目是一个Flutter Package，除了可以独立的运行外，还可以被其他的 Flutter Applicition 集成。
+
+## App信息获取协议
 反复的尝试 MethodChannel 和 Socket后，最后选择了 Socket，因为在大量数据的情况下，MethodChannel 中 result.success 语句总是在主线程中执行，这
 会直接使我们的 flutter app 处于卡死状态。
-
+并且，不仅是Flutter会用到这个功能，它的场景也越来越复杂，最后使用Socket实现一个服务端，任何的语言都能与此通信。
 分以下几种数据响应:
 
 **1.getIconData**
