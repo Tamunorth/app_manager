@@ -8,7 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/src/utils/screen_util.dart';
 
-import 'widget/highlight_text.dart';
+import '../../widgets/highlight_text.dart';
 
 class AppListPage extends StatefulWidget {
   const AppListPage({

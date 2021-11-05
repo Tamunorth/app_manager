@@ -13,6 +13,7 @@ import 'page/long_press_dialog.dart';
 import 'controller/app_manager_controller.dart';
 import 'controller/check_controller.dart';
 import 'page/mark_page.dart';
+import 'widgets/search_box.dart';
 
 class AppManagerWithoutMaterialpp extends StatelessWidget {
   const AppManagerWithoutMaterialpp({Key key}) : super(key: key);
@@ -85,40 +86,11 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
                 child: Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        onChanged: (data) {
+                      child: SearchBox(
+                        onInput: (data) {
                           filter = data;
                           setState(() {});
                         },
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          fillColor: const Color(0xffeeeeee),
-                          hintText: '搜索',
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 10,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            gapPadding: 0,
-                            borderSide: const BorderSide(
-                              width: 0,
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            gapPadding: 0,
-                            borderSide: const BorderSide(
-                              width: 0,
-                              color: Colors.transparent,
-                            ),
-                          ),
-                          filled: true,
-                        ),
                       ),
                     ),
                     SizedBox(
@@ -136,17 +108,17 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
                   return SafeArea(
                     child: <Widget>[
                       AppListPage(
-                        key: Key('user'),
+                        key: const Key('user'),
                         appList: ctl.userApps,
                         filter: filter.toLowerCase(),
                       ),
                       AppListPage(
-                        key: Key('sys'),
+                        key: const Key('sys'),
                         appList: ctl.sysApps,
                         filter: filter.toLowerCase(),
                       ),
-                      MarkPage(),
-                      BackupListPage(),
+                      const MarkPage(),
+                      const BackupListPage(),
                     ][_currentIndex],
                   );
                 }),

@@ -11,6 +11,9 @@ export 'core/implement/remote_app_channel.dart';
 export 'model/app.dart';
 export 'modules/app_page/app_list_page.dart';
 export 'utils/dex_server.dart';
+export 'widgets/app_icon_header.dart';
+export 'widgets/search_box.dart';
+export 'widgets/highlight_text.dart';
 
 class AppManager {
   static Global globalInstance = Global();

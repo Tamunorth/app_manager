@@ -26,8 +26,6 @@ class AppManagerController extends GetxController {
       executable: Global().process,
     );
     update();
-    List<AppInfo> appinfos=await Global().appChannel.getAppInfos(['com.nightmare']);
-    Log.w('_userApps length -> ${_userApps.length}');
   }
 
   Future<void> getSysApp() async {

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
 import 'global/config.dart';
-import 'home.dart';
 import 'routes/app_pages.dart';
 
 //                            _ooOoo_
