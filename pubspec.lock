@@ -20,9 +20,11 @@ packages:
   apputils:
     dependency: "direct main"
     description:
-      path: "/Users/nightmare/Desktop/nightmare-space/apputils"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: b72ec09f7ee91a646e2de0af27146617b68b26e5
+      url: "https://github.com/nightmare-space/apputils"
+    source: git
     version: "0.0.1"
   async:
     dependency: transitive
