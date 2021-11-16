@@ -21,8 +21,6 @@ dependencies:
   hive: ^2.0.4
   apputils:
     git: https://github.com/nightmare-space/apputils
-  termare_pty:
-    git: https://github.com/Termare/termare_pty
   adbutil:
     git: https://github.com/nightmare-space/adbutil
   pseudo_terminal_utils:
@@ -41,3 +39,5 @@ flutter:
 dependency_overrides:
   global_repository:
     path: /Users/nightmare/Desktop/nightmare-space/global_repository
+  apputils:
+    path: /Users/nightmare/Desktop/nightmare-space/apputils

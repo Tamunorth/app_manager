@@ -32,7 +32,6 @@ class AppManagerEntryPoint extends StatefulWidget {
       // 放这儿是对的
     }
     // hide 命令要root
-    Global().initProcess();
     if (Get.arguments != null) {
       Global().process = Get.arguments;
     }

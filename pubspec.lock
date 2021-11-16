@@ -20,11 +20,9 @@ packages:
   apputils:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: b72ec09f7ee91a646e2de0af27146617b68b26e5
-      url: "https://github.com/nightmare-space/apputils"
-    source: git
+      path: "/Users/nightmare/Desktop/nightmare-space/apputils"
+      relative: false
+    source: path
     version: "0.0.1"
   async:
     dependency: transitive
@@ -243,13 +241,6 @@ packages:
       url: "https://github.com/Termare/pseudo_terminal_utils"
     source: git
     version: "0.0.1"
-  quiver:
-    dependency: transitive
-    description:
-      name: quiver
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "3.0.1+1"
   shortcut:
     dependency: "direct main"
     description:
@@ -313,24 +304,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.2.0"
-  termare_pty:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "1b2bd4310315b9455bc9a552896adf1e230a5a71"
-      url: "https://github.com/Termare/termare_pty"
-    source: git
-    version: "1.0.0+1"
-  termare_view:
-    dependency: transitive
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: ce2daf77961ff26fcc80e04e1b3e7a582269a4c6
-      url: "https://github.com/Termare/termare_view"
-    source: git
-    version: "0.0.7"
   test_api:
     dependency: transitive
     description:

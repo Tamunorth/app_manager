@@ -28,7 +28,7 @@ class LocalAppChannel implements AppChannel {
     Log.w('连接成功');
     manager.sendMsg(Protocol.getAllAppInfo + (isSystemApp ? '1' : '0') + '\n');
     final List<String> infos = (await manager.getString()).split('\n');
-    Log.e('infos -> $infos');
+    // Log.e('infos -> $infos');
     final List<AppInfo> entitys = <AppInfo>[];
     for (int i = 0; i < infos.length; i++) {
       List<String> infoList = infos[i].split('\r');

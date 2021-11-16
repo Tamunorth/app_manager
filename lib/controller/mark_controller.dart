@@ -10,7 +10,7 @@ String storeKey = 'mark';
 
 class MarkController extends GetxController {
   MarkController() {
-    Log.w('MarkController');
+    // Log.w('MarkController');
     initBox();
   }
   Box box;
@@ -34,9 +34,9 @@ class MarkController extends GetxController {
     Log.w('getLocalData');
     if (box.containsKey(storeKey)) {
       String local = box.get(storeKey);
-      Log.w(local);
+      // Log.w(local);
       marks = Marks.fromJson(jsonDecode(local));
-      Log.w(marks);
+      // Log.w(marks);
       update();
     }
   }

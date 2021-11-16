@@ -34,10 +34,6 @@ class Global {
   AppChannel appChannel;
   Map<String, List<int>> iconCacheMap = {};
   YanProcess process = YanProcess();
-  Future<void> initProcess() async {
-    // TODO
-    await process.exec('su');
-  }
 
   Future<String> exec(String script) {
     return process.exec(script);

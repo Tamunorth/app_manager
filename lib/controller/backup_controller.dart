@@ -12,7 +12,7 @@ import 'package:path/path.dart';
 
 class BackupController extends GetxController {
   BackupController() {
-    Log.w('BackupController');
+    // Log.w('BackupController');
     initBox();
   }
   String backupPath = '/sdcard/YanTool/AppManager';
@@ -33,7 +33,7 @@ class BackupController extends GetxController {
   Future<void> getLocalData() async {
     Directory(backupPath).createSync(recursive: true);
     String lsResult = await Global().exec(' su -c "ls $backupPath | grep .gz"');
-    Log.e('lsResult -> $lsResult');
+    // Log.e('lsResult -> $lsResult');
     for (final String line in lsResult.split('\n')) {
       backups.add(Backup(
         basenameWithoutExtension(line) + '.apk',
