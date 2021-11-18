@@ -23,7 +23,6 @@ class AppManagerController extends GetxController {
   Future<void> getUserApp() async {
     _userApps = await AppUtils.getAllAppInfo(
       appChannel: Global().appChannel,
-      executable: Global().process,
     );
     update();
   }
@@ -32,7 +31,6 @@ class AppManagerController extends GetxController {
     _sysApps = await AppUtils.getAllAppInfo(
       appType: AppType.system,
       appChannel: Global().appChannel,
-      executable: Global().process,
     );
     update();
     Log.w('_sysApps length -> ${_userApps.length}');

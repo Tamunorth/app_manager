@@ -51,7 +51,6 @@ List<String> parsePMOut(String out) {
 class AppUtils {
   static Future<List<AppInfo>> getAllAppInfo({
     AppType appType = AppType.user,
-    Executable executable,
     AppChannel appChannel,
   }) async {
     bool isSystemApp = false;
