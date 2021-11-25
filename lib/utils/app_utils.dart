@@ -20,26 +20,39 @@ Future<void> cacheAllUserIcons(
   AppChannel appChannel,
 ) async {
   // 所有图
+  Log.w('await iconCacheLock.future');
   await iconCacheLock.future;
   iconCacheLock = Completer();
-  final List<List<int>> byteList =
-      await appChannel.getAllAppIconBytes(packages);
-  // Log.e('allBytes -> $allBytes');
-  if (byteList.isEmpty) {
-    return;
-  }
-  Log.w('缓存全部...');
-  Directory('${RuntimeEnvir.filesPath}/AppManager/.icon').createSync(
-    recursive: true,
-  );
+  String pathPrefix = '${RuntimeEnvir.filesPath}/AppManager/.icon';
+  List<String> needCachePackages = [];
   for (int i = 0; i < packages.length; i++) {
-    String cachePath =
-        '${RuntimeEnvir.filesPath}/AppManager/.icon/${packages[i]}';
+    String cachePath = '$pathPrefix/${packages[i]}';
     File cacheFile = File(cachePath);
     if (!(await cacheFile.exists())) {
-      await cacheFile.writeAsBytes(
-        byteList[i],
-      );
+      needCachePackages.add(packages[i]);
+    }
+  }
+  if (needCachePackages.isEmpty) {
+    iconCacheLock.complete();
+    return;
+  }
+  Log.w('缓存全部... needCachePackages.length -> ${needCachePackages.length}');
+  final List<List<int>> byteList = await appChannel.getAllAppIconBytes(
+    needCachePackages,
+  );
+  // Log.e('allBytes -> $allBytes');
+  if (byteList.isEmpty) {
+    iconCacheLock.complete();
+    return;
+  }
+  Directory(pathPrefix).createSync(
+    recursive: true,
+  );
+  for (int i = 0; i < needCachePackages.length; i++) {
+    String cachePath = '$pathPrefix/${needCachePackages[i]}';
+    File cacheFile = File(cachePath);
+    if (!(await cacheFile.exists())) {
+      await cacheFile.writeAsBytes(byteList[i]);
     }
   }
   iconCacheLock.complete();
@@ -76,6 +89,7 @@ class AppUtils {
     for (AppInfo info in entitys) {
       packages.add(info.packageName);
     }
+    Log.e('isSystemApp -> $isSystemApp');
     cacheAllUserIcons(packages, appChannel);
     return entitys;
   }
