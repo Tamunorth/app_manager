@@ -51,25 +51,13 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
   @override
   void initState() {
     super.initState();
-    init();
   }
-
-  Future<void> init() async {
-    final Directory workDir = Directory(RuntimeEnvir.filesPath + '/AppManager');
-    final bool exists = workDir.existsSync();
-    if (!exists) {
-      await workDir.create(recursive: true);
-    }
-    await Directory(workDir.path + '/.icon').create();
-    appManagerProvider.getUserApp();
-    appManagerProvider.getSysApp();
-  }
-
+  
   AppManagerController appManagerProvider = Get.find();
   CheckController checkController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark,
       child: Scaffold(
         resizeToAvoidBottomInset: false,

@@ -13,6 +13,21 @@ import 'package:global_repository/global_repository.dart';
 /// -u 显示已卸载的app
 /// -d 只显示被禁用的app
 class AppManagerController extends GetxController {
+  AppManagerController() {
+    init();
+  }
+
+  Future<void> init() async {
+    final Directory workDir = Directory(RuntimeEnvir.filesPath + '/AppManager');
+    final bool exists = workDir.existsSync();
+    if (!exists) {
+      await workDir.create(recursive: true);
+    }
+    await Directory(workDir.path + '/.icon').create();
+    getUserApp();
+    getSysApp();
+  }
+
   //用户应用
   List<AppInfo> _userApps = <AppInfo>[];
   //系统应用

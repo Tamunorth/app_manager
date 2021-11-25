@@ -30,9 +30,13 @@ class _AppIconHeaderState extends State<AppIconHeader> {
   Future<void> loadAppIcon() async {
     File cacheFile = File('$iconDirPath/${widget.packageName}');
     if (!await cacheFile.exists()) {
-      await cacheFile.writeAsBytes(
-        await Global().appChannel.getAppIconBytes(widget.packageName),
-      );
+      await iconCacheLock.future;
+      if (!await cacheFile.exists()) {
+        // 如果这个时候还是不存在
+        await cacheFile.writeAsBytes(
+          await Global().appChannel.getAppIconBytes(widget.packageName),
+        );
+      }
     }
     prepare = true;
     if (mounted) {

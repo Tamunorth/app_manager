@@ -13,7 +13,7 @@ import 'package:apputils/apputils.dart';
 class LocalAppChannel implements AppChannel {
   Future<int> getPort() async {
     if (port != null) {
-      Log.e('port -> $port');
+      // Log.e('port -> $port');
       return port;
     }
     return port = await AppServerUtils.port;
@@ -23,9 +23,9 @@ class LocalAppChannel implements AppChannel {
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
     SocketWrapper manager =
         SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    Log.w('等待连接');
+    // Log.w('等待连接');
     await manager.connect();
-    Log.w('连接成功');
+    // Log.w('连接成功');
     manager.sendMsg(Protocol.getAllAppInfo + (isSystemApp ? '1' : '0') + '\n');
     final List<String> infos = (await manager.getString()).split('\n');
     // Log.e('infos -> $infos');

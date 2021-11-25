@@ -32,7 +32,7 @@ class SocketWrapper {
       return true;
     } catch (e) {
       debugPrint('连接socket出现异常，e=${e.toString()}');
-      rethrow;
+      return false;
     }
   }
 

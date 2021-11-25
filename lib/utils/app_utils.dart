@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:app_manager/core/interface/app_channel.dart';
@@ -8,18 +9,19 @@ import 'package:apputils/apputils.dart';
 import 'package:flutter/services.dart';
 import 'package:global_repository/global_repository.dart';
 
-const MethodChannel _channel = MethodChannel('app_manager');
 enum AppType {
   user,
   system,
 }
-
+Completer iconCacheLock = Completer()..complete();
 // 根据文件头将一维数组缓拆分成二维数组
 Future<void> cacheAllUserIcons(
   List<String> packages,
   AppChannel appChannel,
 ) async {
   // 所有图
+  await iconCacheLock.future;
+  iconCacheLock = Completer();
   final List<List<int>> byteList =
       await appChannel.getAllAppIconBytes(packages);
   // Log.e('allBytes -> $allBytes');
@@ -40,6 +42,7 @@ Future<void> cacheAllUserIcons(
       );
     }
   }
+  iconCacheLock.complete();
 }
 
 List<String> parsePMOut(String out) {
