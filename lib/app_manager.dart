@@ -13,6 +13,7 @@ export 'modules/app_page/app_list_page.dart';
 export 'widgets/app_icon_header.dart';
 export 'widgets/search_box.dart';
 export 'widgets/highlight_text.dart';
+export 'controller/icon_controller.dart';
 
 class AppManager {
   static Global globalInstance = Global();

@@ -1,29 +1,36 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_manager/controller/icon_controller.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/config.dart';
+import 'package:app_manager/global/icon_store.dart';
 import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/socket_util.dart';
 import 'package:apputils/apputils.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+import 'package:path_provider/path_provider.dart';
 
 enum AppType {
   user,
   system,
 }
-Completer iconCacheLock = Completer()..complete();
 // 根据文件头将一维数组缓拆分成二维数组
 Future<void> cacheAllUserIcons(
   List<String> packages,
   AppChannel appChannel,
 ) async {
   // 所有图
-  Log.w('await iconCacheLock.future');
-  await iconCacheLock.future;
-  iconCacheLock = Completer();
-  String pathPrefix = '${RuntimeEnvir.filesPath}/AppManager/.icon';
+  Directory appDocDir = await getApplicationSupportDirectory();
+  String appDocPath = appDocDir.path;
+  // Log.w('getTemporaryDirectory -> ${await getTemporaryDirectory()}');
+  // Log.w('getLibraryDirectory -> ${await getLibraryDirectory()}');
+  // Log.w('getApplicationDocumentsDirectory -> ${await getApplicationDocumentsDirectory()}');
+  // Log.w('getDownloadsDirectory -> ${await getDownloadsDirectory()}');
+  Log.w('缓存的图标文件夹 -> $appDocPath');
+  String pathPrefix = '$appDocPath/AppManager/.icon';
   List<String> needCachePackages = [];
   for (int i = 0; i < packages.length; i++) {
     String cachePath = '$pathPrefix/${packages[i]}';
@@ -33,7 +40,6 @@ Future<void> cacheAllUserIcons(
     }
   }
   if (needCachePackages.isEmpty) {
-    iconCacheLock.complete();
     return;
   }
   Log.w('缓存全部... needCachePackages.length -> ${needCachePackages.length}');
@@ -41,21 +47,22 @@ Future<void> cacheAllUserIcons(
     needCachePackages,
   );
   // Log.e('allBytes -> $allBytes');
-  if (byteList.isEmpty) {
-    iconCacheLock.complete();
-    return;
-  }
-  Directory(pathPrefix).createSync(
-    recursive: true,
-  );
-  for (int i = 0; i < needCachePackages.length; i++) {
-    String cachePath = '$pathPrefix/${needCachePackages[i]}';
-    File cacheFile = File(cachePath);
-    if (!(await cacheFile.exists())) {
-      await cacheFile.writeAsBytes(byteList[i]);
-    }
-  }
-  iconCacheLock.complete();
+  // if (byteList.isEmpty) {
+  //   return;
+  // }
+  // Directory(pathPrefix).createSync(
+  //   recursive: true,
+  // );
+  // for (int i = 0; i < needCachePackages.length; i++) {
+  //   String cachePath = '$pathPrefix/${needCachePackages[i]}';
+  //   File cacheFile = File(cachePath);
+  //   if (!(await cacheFile.exists())) {
+  //     IconStore().cache(needCachePackages[i], byteList[i]);
+  //     // cacheFile.writeAsBytes(byteList[i]);
+  //   }
+  // }
+  // IconController controller = Get.find();
+  // controller.update();
 }
 
 List<String> parsePMOut(String out) {
@@ -85,12 +92,6 @@ class AppUtils {
     entitys.sort(
       (a, b) => a.appName.toLowerCase().compareTo(b.appName.toLowerCase()),
     );
-    List<String> packages = [];
-    for (AppInfo info in entitys) {
-      packages.add(info.packageName);
-    }
-    Log.e('isSystemApp -> $isSystemApp');
-    cacheAllUserIcons(packages, appChannel);
     return entitys;
   }
 }

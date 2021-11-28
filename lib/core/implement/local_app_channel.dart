@@ -1,12 +1,16 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/core/foundation/protocol.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
+import 'package:app_manager/global/icon_store.dart';
 import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/socket_util.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 import 'package:apputils/apputils.dart';
 
@@ -104,28 +108,67 @@ class LocalAppChannel implements AppChannel {
         SocketWrapper(InternetAddress.anyIPv4, await getPort());
     await manager.connect();
     manager.sendMsg(Protocol.getAllIconData + packages.join(' ') + '\n');
-    List<int> allBytes = await manager.getResult();
-    List<List<int>> byteList = [];
-    byteList.length = packages.length;
-    int index = 0;
-    // 根据png编码的头对图片进行拆分
-    for (int i = 0; i < allBytes.length; i++) {
-      byteList[index] ??= [];
-      byteList[index].add(allBytes[i]);
-      if (i < allBytes.length - 1 - 6 &&
-          allBytes[i + 1] == 137 &&
-          allBytes[i + 2] == 80 &&
-          allBytes[i + 3] == 78 &&
-          allBytes[i + 4] == 71 &&
-          allBytes[i + 5] == 13 &&
-          allBytes[i + 6] == 10 &&
-          i != 0) {
-        index++;
-        // Log.w('缓存第$index个包名的');
+    String package = '';
+    List<int> buffer = [];
+    Completer lock = Completer();
+    bool bufferIsIcon = false;
+    IconController controller = Get.find();
+    manager.mStream.listen((event) {
+      // 58 是 :
+      // Log.e('event:${event.first} ${event.last}');
+      if (event[0] == 137 || bufferIsIcon) {
+        if (event.last == 58) {
+          // Log.w('缓存 buffer $buffer');
+          IconStore().cache(
+            package,
+            buffer + event.sublist(0, event.length - 1),
+          );
+          bufferIsIcon = false;
+          controller.update();
+          buffer.clear();
+          manager.sendByte([0]);
+        } else {
+          bufferIsIcon = true;
+          buffer.addAll(event);
+        }
+      } else {
+        if (event.last == 58) {
+          package = utf8.decode(buffer + event.sublist(0, event.length - 1));
+          // Log.w('package name:$package');
+          buffer.clear();
+          manager.sendByte([0]);
+        } else {
+          bufferIsIcon = false;
+          buffer.addAll(event);
+        }
       }
-    }
+    }, onDone: () {
+      lock.complete();
+      
+    });
+    await lock.future;
+    // List<int> allBytes = await manager.getResult();
+    // List<List<int>> byteList = [];
+    // byteList.length = packages.length;
+    // int index = 0;
+    // // 根据png编码的头对图片进行拆分
+    // for (int i = 0; i < allBytes.length; i++) {
+    //   byteList[index] ??= [];
+    //   byteList[index].add(allBytes[i]);
+    //   if (i < allBytes.length - 1 - 6 &&
+    //       allBytes[i + 1] == 137 &&
+    //       allBytes[i + 2] == 80 &&
+    //       allBytes[i + 3] == 78 &&
+    //       allBytes[i + 4] == 71 &&
+    //       allBytes[i + 5] == 13 &&
+    //       allBytes[i + 6] == 10 &&
+    //       i != 0) {
+    //     index++;
+
+    //   }
+    // }
     // Log.w(result);
-    return byteList;
+    // return byteList;
   }
 
   @override

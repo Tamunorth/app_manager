@@ -64,7 +64,6 @@ class SocketWrapper {
     List<int> tmp = [];
     mStream.listen((event) {
       tmp.addAll(event);
-      // Log.e(event);
     }, onDone: () {
       completer.complete(tmp);
     });
@@ -92,6 +91,15 @@ class SocketWrapper {
     //给服务器发消息
     try {
       socket.add(utf8.encode(msg));
+      socket.flush();
+    } catch (e) {
+      debugPrint('e=${e.toString()}');
+    }
+  }
+  void sendByte(List<int> bytes) {
+    //给服务器发消息
+    try {
+      socket.add(bytes);
       socket.flush();
     } catch (e) {
       debugPrint('e=${e.toString()}');

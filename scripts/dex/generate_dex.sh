@@ -1,6 +1,7 @@
 LOCAL_DIR=$(cd `dirname $0`; pwd)
 apkPath="build/app/outputs/flutter-apk/app-release.apk"
 rm -rf $LOCAL_DIR/tmp
+rm -rf $LOCAL_DIR/server.jar
 $LOCAL_DIR/apktool.sh d $apkPath -r -f -o $LOCAL_DIR/tmp
 rm -rf $LOCAL_DIR/tmp/lib
 rm -rf $LOCAL_DIR/tmp/assets

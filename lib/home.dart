@@ -45,6 +45,7 @@ class AppManagerEntryPoint extends StatefulWidget {
 
 class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
     with SingleTickerProviderStateMixin {
+  AppManagerController controller = Get.find();
   int _currentIndex = 0;
   String filter = '';
 
@@ -52,7 +53,7 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
   void initState() {
     super.initState();
   }
-  
+
   AppManagerController appManagerProvider = Get.find();
   CheckController checkController = Get.find();
   @override
@@ -157,6 +158,9 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
           type: BottomNavigationBarType.fixed,
           onTap: (int index) {
             _currentIndex = index;
+            if (index == 1) {
+              controller.cacheSysIcon();
+            }
             setState(() {});
           },
         ),

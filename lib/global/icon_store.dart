@@ -25,5 +25,9 @@ class IconStore {
     return [];
   }
 
+  bool hasCache(String package) {
+    return iconCacheMap.containsKey(package);
+  }
+
   Map<String, List<int>> iconCacheMap = {};
 }

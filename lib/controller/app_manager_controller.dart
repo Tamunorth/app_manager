@@ -14,6 +14,7 @@ import 'package:global_repository/global_repository.dart';
 /// -d 只显示被禁用的app
 class AppManagerController extends GetxController {
   AppManagerController() {
+    // todo 时机不对
     init();
   }
 
@@ -24,8 +25,13 @@ class AppManagerController extends GetxController {
       await workDir.create(recursive: true);
     }
     await Directory(workDir.path + '/.icon').create();
-    getUserApp();
-    getSysApp();
+    await getUserApp();
+    await getSysApp();
+    List<String> packages = [];
+    for (AppInfo info in _userApps) {
+      packages.add(info.packageName);
+    }
+    await cacheAllUserIcons(packages, Global().appChannel);
   }
 
   //用户应用
@@ -42,13 +48,21 @@ class AppManagerController extends GetxController {
     update();
   }
 
+  Future<void> cacheSysIcon() async {
+    List<String> packages = [];
+    packages.clear();
+    for (AppInfo info in _sysApps) {
+      packages.add(info.packageName);
+    }
+    await cacheAllUserIcons(packages, Global().appChannel);
+  }
+
   Future<void> getSysApp() async {
     _sysApps = await AppUtils.getAllAppInfo(
       appType: AppType.system,
       appChannel: Global().appChannel,
     );
     update();
-    Log.w('_sysApps length -> ${_userApps.length}');
   }
 
   // Future<void> cacheUserIcons() async {
