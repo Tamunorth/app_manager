@@ -42,6 +42,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
     String appDocPath = appDocDir.path;
     iconDirPath = '$appDocPath/AppManager/.icon';
     File cacheFile = File('$iconDirPath/${widget.packageName}');
+    Directory(iconDirPath).createSync(recursive: true);
     if (IconStore().hasCache(widget.packageName)) {
       useByte = true;
       prepare = true;

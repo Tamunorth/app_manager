@@ -13,25 +13,16 @@ import 'package:global_repository/global_repository.dart';
 /// -u 显示已卸载的app
 /// -d 只显示被禁用的app
 class AppManagerController extends GetxController {
-  AppManagerController() {
-    // todo 时机不对
-    init();
-  }
-
+  AppManagerController() {}
+  bool isInit = false;
   Future<void> init() async {
-    final Directory workDir = Directory(RuntimeEnvir.filesPath + '/AppManager');
-    final bool exists = workDir.existsSync();
-    if (!exists) {
-      await workDir.create(recursive: true);
+    if (isInit) {
+      return;
     }
-    await Directory(workDir.path + '/.icon').create();
+    isInit = true;
     await getUserApp();
     await getSysApp();
-    List<String> packages = [];
-    for (AppInfo info in _userApps) {
-      packages.add(info.packageName);
-    }
-    await cacheAllUserIcons(packages, Global().appChannel);
+    cacheUserIcon();
   }
 
   //用户应用
@@ -57,6 +48,15 @@ class AppManagerController extends GetxController {
     await cacheAllUserIcons(packages, Global().appChannel);
   }
 
+  Future<void> cacheUserIcon() async {
+    List<String> packages = [];
+    packages.clear();
+    for (AppInfo info in _userApps) {
+      packages.add(info.packageName);
+    }
+    await cacheAllUserIcons(packages, Global().appChannel);
+  }
+
   Future<void> getSysApp() async {
     _sysApps = await AppUtils.getAllAppInfo(
       appType: AppType.system,
@@ -64,35 +64,6 @@ class AppManagerController extends GetxController {
     );
     update();
   }
-
-  // Future<void> cacheUserIcons() async {
-  //   for (AppInfo entity in _userApps) {
-  //     // Log.i('缓存 ${entity.packageName} 图标');
-  //     // if (IconStore().loadCache(entity.packageName).isEmpty) {
-  //     File cacheFile = File(
-  //         RuntimeEnvir.filesPath + '/AppManager/.icon/${entity.packageName}');
-  //     if (!await cacheFile.exists()) {
-  //       await cacheFile.writeAsBytes(
-  //         await Global().appChannel.getAppIconBytes(entity.packageName),
-  //       );
-  //     }
-  //     // IconStore().cache(
-  //     //   entity.packageName,
-  //     //   await AppUtils.getAppIconBytes(entity.packageName),
-  //     // );
-  //     // }
-  //   }
-  // }
-
-  // Future<void> cacheSysIcons() async {
-  //   for (AppEntity entity in _sysApps) {
-  //     // Log.i('缓存 ${entity.packageName} 图标');
-  //     IconStore().cache(
-  //       entity.packageName,
-  //       await AppUtils.getAppIconBytes(entity.packageName),
-  //     );
-  //   }
-  // }
 
   void removeEntity(AppInfo entity) {
     if (_userApps.contains(entity)) {

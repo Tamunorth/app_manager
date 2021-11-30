@@ -107,7 +107,7 @@ class LocalAppChannel implements AppChannel {
     SocketWrapper manager =
         SocketWrapper(InternetAddress.anyIPv4, await getPort());
     await manager.connect();
-    manager.sendMsg(Protocol.getAllIconData + packages.join(' ') + '\n');
+    manager.sendMsg(Protocol.getIconDatas + packages.join(' ') + '\n');
     String package = '';
     List<int> buffer = [];
     Completer lock = Completer();

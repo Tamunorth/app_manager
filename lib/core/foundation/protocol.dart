@@ -1,8 +1,8 @@
 class Protocol {
   static String getIconData = 'getIconData:';
+  static String getIconDatas = 'getIconDatas:';
   static String getAllAppInfo = 'getAllAppInfo:';
   static String getAppInfos = 'getAppInfos:';
-  static String getAllIconData = 'getAllIconData:';
   static String getAppActivity = 'getAppActivity:';
   static String getAppPermissions = 'getAppPermissions:';
   static String getAppDetail = 'getAppDetail:';

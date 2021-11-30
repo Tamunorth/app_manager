@@ -52,6 +52,7 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
   @override
   void initState() {
     super.initState();
+    controller.init();
   }
 
   AppManagerController appManagerProvider = Get.find();
