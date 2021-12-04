@@ -29,7 +29,7 @@ Future<void> cacheAllUserIcons(
   // Log.w('getLibraryDirectory -> ${await getLibraryDirectory()}');
   // Log.w('getApplicationDocumentsDirectory -> ${await getApplicationDocumentsDirectory()}');
   // Log.w('getDownloadsDirectory -> ${await getDownloadsDirectory()}');
-  Log.w('缓存的图标文件夹 -> $appDocPath');
+  // Log.w('缓存的图标文件夹 -> $appDocPath');
   String pathPrefix = '$appDocPath/AppManager/.icon';
   List<String> needCachePackages = [];
   for (int i = 0; i < packages.length; i++) {

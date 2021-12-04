@@ -20,7 +20,10 @@ class LocalAppChannel implements AppChannel {
       // Log.e('port -> $port');
       return port;
     }
-    return port = await AppServerUtils.port;
+
+    port = await AppServerUtils.port;
+    Log.w('成功获取 LocalAppChannel port -> $port');
+    return port;
   }
 
   @override
@@ -144,7 +147,6 @@ class LocalAppChannel implements AppChannel {
       }
     }, onDone: () {
       lock.complete();
-      
     });
     await lock.future;
     // List<int> allBytes = await manager.getResult();
@@ -259,9 +261,9 @@ class LocalAppChannel implements AppChannel {
   Future<List<AppInfo>> getAppInfos(List<String> packages) async {
     SocketWrapper manager =
         SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    Log.w('等待连接');
+    // Log.w('等待连接');
     await manager.connect();
-    Log.w('连接成功');
+    // Log.w('连接成功');
     manager.sendMsg(Protocol.getAppInfos + packages.join(' ') + '\n');
     final List<String> infos = (await manager.getString()).split('\n');
     final List<AppInfo> entitys = <AppInfo>[];

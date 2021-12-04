@@ -1,3 +1,4 @@
+import 'package:app_manager/bindings/app_manager_binding.dart';
 import 'package:app_manager/core/implement/local_app_channel.dart';
 import 'package:app_manager/core/implement/remote_app_channel.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
@@ -12,14 +13,14 @@ class Global {
 
   factory Global() => _getInstance();
   Global._internal() {
+    appChannel = LocalAppChannel();
     if (RuntimeEnvir.packageName != Config.packageName) {
       // 如果这个项目是独立运行的，那么RuntimeEnvir.packageName会在main函数中被设置成Config.packageName
       Config.flutterPackage = Config.flutterPackagePrifix;
       Get.addPages(AppPages.routes);
-      appChannel = RemoteAppChannel();
-    } else {
-      appChannel = LocalAppChannel();
-    }
+      // 避免没有注册到依赖
+      AppManagerBinding().dependencies();
+    } else {}
   }
 
   static Global get instance => _getInstance();

@@ -35,8 +35,6 @@ class AppManagerEntryPoint extends StatefulWidget {
     if (Get.arguments != null) {
       Global().process = Get.arguments;
     }
-    // 避免没有注册到依赖
-    AppManagerBinding().dependencies();
   }
   final Executable process;
   @override

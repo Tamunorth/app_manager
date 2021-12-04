@@ -352,11 +352,15 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                NiIconButton(
-                  onTap: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Icon(Icons.arrow_back_ios_new),
+                Row(
+                  children: [
+                    NiIconButton(
+                      onTap: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Icon(Icons.arrow_back_ios_new),
+                    ),
+                  ],
                 ),
                 buildBody(),
                 Padding(

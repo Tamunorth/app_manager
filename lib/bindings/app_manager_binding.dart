@@ -11,9 +11,9 @@ class AppManagerBinding extends Bindings {
   void dependencies() {
     Get.put(AppManagerController());
     Get.put(CheckController());
-    Log.w('MarkController inject');
     Get.put(MarkController());
     Get.put(BackupController());
+    Log.w('IconController inject');
     Get.put(IconController());
   }
 }
