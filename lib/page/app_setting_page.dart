@@ -338,7 +338,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
   Widget build(BuildContext context) {
     return GetBuilder<AppManagerController>(builder: (_) {
       if (widget.entity.details == null) {
-        return const SpinKitThreeBounce(
+        return SpinKitThreeBounce(
           color: Colors.indigo,
           size: 24,
         );

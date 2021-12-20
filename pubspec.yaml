@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  path_provider: ^2.0.7
+  # path_provider: ^2.0.7
   android_intent_plus: ^1.0.2
   # Flutter 的一些动画
   flutter_spinkit: "^4.1.2"
@@ -40,3 +40,5 @@ dependency_overrides:
     path: /Users/nightmare/Desktop/nightmare-space/global_repository
   apputils:
     path: /Users/nightmare/Desktop/nightmare-space/apputils
+  adbutil:
+    path: /Users/nightmare/Desktop/nightmare-space/adbutil

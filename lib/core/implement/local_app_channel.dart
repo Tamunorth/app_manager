@@ -28,6 +28,8 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
+    Stopwatch watch = Stopwatch();
+    watch.start();
     SocketWrapper manager =
         SocketWrapper(InternetAddress.anyIPv4, await getPort());
     // Log.w('等待连接');
@@ -35,6 +37,7 @@ class LocalAppChannel implements AppChannel {
     // Log.w('连接成功');
     manager.sendMsg(Protocol.getAllAppInfo + (isSystemApp ? '1' : '0') + '\n');
     final List<String> infos = (await manager.getString()).split('\n');
+    Log.e('watch -> ${watch.elapsed}');
     // Log.e('infos -> $infos');
     final List<AppInfo> entitys = <AppInfo>[];
     for (int i = 0; i < infos.length; i++) {

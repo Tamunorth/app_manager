@@ -11,7 +11,7 @@ import 'package:apputils/apputils.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 
 enum AppType {
   user,
@@ -23,8 +23,8 @@ Future<void> cacheAllUserIcons(
   AppChannel appChannel,
 ) async {
   // 所有图
-  Directory appDocDir = await getApplicationSupportDirectory();
-  String appDocPath = appDocDir.path;
+  // Directory appDocDir = await getApplicationSupportDirectory();
+  String appDocPath = RuntimeEnvir.filesPath;
   // Log.w('getTemporaryDirectory -> ${await getTemporaryDirectory()}');
   // Log.w('getLibraryDirectory -> ${await getLibraryDirectory()}');
   // Log.w('getApplicationDocumentsDirectory -> ${await getApplicationDocumentsDirectory()}');

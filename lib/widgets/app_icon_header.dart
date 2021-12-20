@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:path_provider/path_provider.dart';
 
 class AppIconHeader extends StatefulWidget {
   const AppIconHeader({
@@ -38,8 +37,8 @@ class _AppIconHeaderState extends State<AppIconHeader> {
     if (useByte) {
       return;
     }
-    Directory appDocDir = await getApplicationSupportDirectory();
-    String appDocPath = appDocDir.path;
+    // Directory appDocDir = await getApplicationSupportDirectory();
+    String appDocPath = RuntimeEnvir.filesPath;
     iconDirPath = '$appDocPath/AppManager/.icon';
     File cacheFile = File('$iconDirPath/${widget.packageName}');
     Directory(iconDirPath).createSync(recursive: true);
@@ -69,7 +68,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
   @override
   Widget build(BuildContext context) {
     if (!prepare) {
-      return const SizedBox(
+      return SizedBox(
         width: 54,
         height: 54,
         child: SpinKitDoubleBounce(
@@ -79,24 +78,27 @@ class _AppIconHeaderState extends State<AppIconHeader> {
       );
     } else {
       // Log.d('${widget.packageName} useByte:$useByte');
+      Widget child;
       if (useByte) {
-        return SizedBox(
-          child: Padding(
-            padding: widget.padding,
-            child: Image.memory(
-              Uint8List.fromList(IconStore().loadCache(widget.packageName)),
-              gaplessPlayback: true,
-            ),
+        child = SizedBox(
+          child: Image.memory(
+            Uint8List.fromList(IconStore().loadCache(widget.packageName)),
+            gaplessPlayback: true,
           ),
         );
-      }
-      return SizedBox(
-        child: Padding(
-          padding: widget.padding,
+      } else {
+        child = SizedBox(
           child: Image.file(
             File('$iconDirPath/${widget.packageName}'),
             gaplessPlayback: true,
           ),
+        );
+      }
+      return Padding(
+        padding: widget.padding,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8.w),
+          child: child,
         ),
       );
     }

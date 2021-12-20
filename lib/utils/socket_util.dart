@@ -25,7 +25,7 @@ class SocketWrapper {
         address,
         port,
         timeout: const Duration(
-          milliseconds: 100,
+          milliseconds: 1000,
         ),
       );
       mStream = socket.asBroadcastStream();
@@ -79,7 +79,7 @@ class SocketWrapper {
       // Log.w('stream down');
       completer.complete(utf8.decode(tmp));
     });
-    Future.delayed(const Duration(seconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 2000), () {
       if (!completer.isCompleted) {
         completer.complete();
       }

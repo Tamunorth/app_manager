@@ -39,7 +39,7 @@ class AppListPageState extends State<AppListPage> {
   Widget build(BuildContext context) {
     List<AppInfo> apps = List.from(widget.appList);
     if (apps.isEmpty) {
-      return const SpinKitThreeBounce(
+      return SpinKitThreeBounce(
         color: AppColors.accentColor,
         size: 16.0,
       );
