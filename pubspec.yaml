@@ -35,10 +35,10 @@ flutter:
   assets:
     - assets/
     
-dependency_overrides:
-  global_repository:
-    path: /Users/nightmare/Desktop/nightmare-space/global_repository
-  apputils:
-    path: /Users/nightmare/Desktop/nightmare-space/apputils
-  adbutil:
-    path: /Users/nightmare/Desktop/nightmare-space/adbutil
+# dependency_overrides:
+#   global_repository:
+#     path: /Users/nightmare/Desktop/nightmare-space/global_repository
+#   apputils:
+#     path: /Users/nightmare/Desktop/nightmare-space/apputils
+#   adbutil:
+#     path: /Users/nightmare/Desktop/nightmare-space/adbutil
