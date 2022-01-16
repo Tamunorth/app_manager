@@ -45,7 +45,7 @@ class AppManagerController extends GetxController {
     for (AppInfo info in _sysApps) {
       packages.add(info.packageName);
     }
-    await cacheAllUserIcons(packages, Global().appChannel);
+    // await cacheAllUserIcons(packages, Global().appChannel);
   }
 
   Future<void> cacheUserIcon() async {
@@ -54,7 +54,7 @@ class AppManagerController extends GetxController {
     for (AppInfo info in _userApps) {
       packages.add(info.packageName);
     }
-    await cacheAllUserIcons(packages, Global().appChannel);
+    // await cacheAllUserIcons(packages, Global().appChannel);
   }
 
   Future<void> getSysApp() async {

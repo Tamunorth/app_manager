@@ -4,9 +4,11 @@ packages:
   adbutil:
     dependency: "direct main"
     description:
-      path: "/Users/nightmare/Desktop/nightmare-space/adbutil"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "6cf891bb78bc893c569119fe7bbd767a9942681d"
+      url: "https://github.com/nightmare-space/adbutil"
+    source: git
     version: "0.0.1"
   android_intent_plus:
     dependency: "direct main"
@@ -15,10 +17,10 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.2"
-  apputils:
+  applib_util:
     dependency: "direct main"
     description:
-      path: "/Users/nightmare/Desktop/nightmare-space/apputils"
+      path: "/Users/nightmare/Desktop/nightmare-space/applib/applib_util"
       relative: false
     source: path
     version: "0.0.1"
@@ -122,13 +124,15 @@ packages:
       name: get
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "4.3.8"
+    version: "4.6.1"
   global_repository:
     dependency: "direct main"
     description:
-      path: "/Users/nightmare/Desktop/nightmare-space/global_repository"
-      relative: false
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "8ae0e1b004241124cad124a1a343fa07a4acf279"
+      url: "https://github.com/nightmare-space/global_repository"
+    source: git
     version: "0.0.1"
   hive:
     dependency: "direct main"
@@ -136,7 +140,7 @@ packages:
       name: hive
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   lints:
     dependency: transitive
     description:
@@ -206,14 +210,14 @@ packages:
       name: platform
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
       name: plugin_platform_interface
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.2"
   shortcut:
     dependency: "direct main"
     description:
@@ -226,7 +230,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "99e278923e468ca882dd13208255fd0944ad5da3"
+      resolved-ref: "88178082851b2ee28363eae69a94ef424f763c60"
       url: "https://github.com/nightmare-space/signale"
     source: git
     version: "0.0.6"

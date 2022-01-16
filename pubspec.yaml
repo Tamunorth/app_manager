@@ -20,8 +20,8 @@ dependencies:
     git: https://github.com/nightmare-space/global_repository
   flutter_svg: ^0.22.0
   hive: ^2.0.4
-  apputils:
-    git: https://github.com/nightmare-space/apputils
+  applib_util:
+    path: /Users/nightmare/Desktop/nightmare-space/applib/applib_util
   adbutil:
     git: https://github.com/nightmare-space/adbutil
   

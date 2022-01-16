@@ -50,6 +50,15 @@ class _AppIconHeaderState extends State<AppIconHeader> {
         setState(() {});
       }
       return;
+    } else {
+      useByte = true;
+      prepare = true;
+      List<int> byte =
+          await Global().appChannel.getAppIconBytes(widget.packageName);
+      IconStore().cache(widget.packageName, byte);
+      if (mounted) {
+        setState(() {});
+      }
     }
     if (await cacheFile.exists()) {
       prepare = true;
@@ -80,10 +89,29 @@ class _AppIconHeaderState extends State<AppIconHeader> {
       // Log.d('${widget.packageName} useByte:$useByte');
       Widget child;
       if (useByte) {
+        Uint8List byte =
+            Uint8List.fromList(IconStore().loadCache(widget.packageName));
+        if (byte.isEmpty) {
+          return SizedBox(
+            width: 54,
+            height: 54,
+            child: Icon(Icons.image),
+          );
+        }
         child = SizedBox(
           child: Image.memory(
-            Uint8List.fromList(IconStore().loadCache(widget.packageName)),
+            Uint8List.fromList(byte),
             gaplessPlayback: true,
+            errorBuilder: (_, __, ___) {
+              return SizedBox(
+                width: 54,
+                height: 54,
+                child: SpinKitDoubleBounce(
+                  color: Colors.indigo,
+                  size: 16.0,
+                ),
+              );
+            },
           ),
         );
       } else {

@@ -1,18 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'dart:math';
+import 'dart:typed_data';
 import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/core/foundation/protocol.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
 import 'package:app_manager/global/icon_store.dart';
-import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/socket_util.dart';
-import 'package:flutter/services.dart';
+import 'package:applib_util/applib_util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
-import 'package:apputils/apputils.dart';
 
 class LocalAppChannel implements AppChannel {
   Future<int> getPort() async {
@@ -20,8 +20,7 @@ class LocalAppChannel implements AppChannel {
       // Log.e('port -> $port');
       return port;
     }
-
-    port = await AppServerUtils.port;
+    port = await ApplibUtil.port;
     Log.w('成功获取 LocalAppChannel port -> $port');
     return port;
   }
@@ -110,8 +109,10 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<List<int>>> getAllAppIconBytes(List<String> packages) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
+    SocketWrapper manager = SocketWrapper(
+      InternetAddress.anyIPv4,
+      await getPort(),
+    );
     await manager.connect();
     manager.sendMsg(Protocol.getIconDatas + packages.join(' ') + '\n');
     String package = '';
@@ -119,33 +120,43 @@ class LocalAppChannel implements AppChannel {
     Completer lock = Completer();
     bool bufferIsIcon = false;
     IconController controller = Get.find();
-    manager.mStream.listen((event) {
-      // 58 是 :
-      // Log.e('event:${event.first} ${event.last}');
-      if (event[0] == 137 || bufferIsIcon) {
-        if (event.last == 58) {
-          // Log.w('缓存 buffer $buffer');
-          IconStore().cache(
-            package,
-            buffer + event.sublist(0, event.length - 1),
-          );
-          bufferIsIcon = false;
+    bool isBreak = false;
+    Stream<Uint8List> stream = manager.mStream;
+
+    stream.listen((event) {
+      // BytesBuilder bytesBuilder = BytesBuilder();
+      // bytesBuilder.add(event);
+      // ByteBuffer byteBuffer = bytesBuilder.takeBytes().buffer;
+      // byteBuffer.asByteData().
+      Uint8List list = Uint8List.fromList(event);
+      while (list.isNotEmpty) {
+        if (buffer.isEmpty) {
+          Log.i('list : ${list}');
+          int packLength =
+              list[0] << 24 | list[1] << 16 | list[2] << 8 | list[3];
+          buffer.add(packLength);
+          list = list.sublist(4);
+        }
+        Log.i('shouldRead : ${buffer.first}');
+        if (buffer.length != buffer.first) {
+          int needAppend = buffer.first - buffer.length-1;
+          Log.i('needAppend : $needAppend');
+          Log.i('list.length : ${list.length}');
+          int souldTake = min(needAppend, list.length);
+          buffer.addAll(list.take(souldTake));
+          Log.i('buffer : $buffer');
+          Log.i('buffer.length : ${buffer.length}');
+          list = list.sublist(souldTake + 1);
+        }
+        if (buffer.length == buffer.first+1) {
+          int index = buffer.indexOf(58);
+          String package = utf8.decode(buffer.sublist(1, index));
+          Log.i('package : $package');
+          List<int> iconByte = buffer.sublist(index + 1);
+          Log.i('iconByte : $iconByte');
+          IconStore().cache(package, iconByte);
           controller.update();
           buffer.clear();
-          manager.sendByte([0]);
-        } else {
-          bufferIsIcon = true;
-          buffer.addAll(event);
-        }
-      } else {
-        if (event.last == 58) {
-          package = utf8.decode(buffer + event.sublist(0, event.length - 1));
-          // Log.w('package name:$package');
-          buffer.clear();
-          manager.sendByte([0]);
-        } else {
-          bufferIsIcon = false;
-          buffer.addAll(event);
         }
       }
     }, onDone: () {

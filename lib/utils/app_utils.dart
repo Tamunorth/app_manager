@@ -1,15 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:app_manager/controller/icon_controller.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
-import 'package:app_manager/global/config.dart';
-import 'package:app_manager/global/icon_store.dart';
 import 'package:app_manager/model/app.dart';
-import 'package:app_manager/utils/socket_util.dart';
-import 'package:apputils/apputils.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 // import 'package:path_provider/path_provider.dart';
 

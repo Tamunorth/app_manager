@@ -16,6 +16,7 @@ class SocketWrapper {
   final int port;
   Socket socket;
   Stream<List<int>> mStream;
+  // Stream<List<int>> uintStream;
   Int8List cacheData = Int8List(0);
   static ServerSocket serverSocket;
 
