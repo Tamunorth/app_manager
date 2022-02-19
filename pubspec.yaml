@@ -21,7 +21,9 @@ dependencies:
   flutter_svg: ^0.22.0
   hive: ^2.0.4
   applib_util:
-    path: /Users/nightmare/Desktop/nightmare-space/applib/applib_util
+    git:
+      url: https://github.com/nightmare-space/applib
+      path: applib_util
   adbutil:
     git: https://github.com/nightmare-space/adbutil
   
