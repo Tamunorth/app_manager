@@ -423,7 +423,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                               child: Row(
                                 children: [
                                   SizedBox(
-                                    width: 250,
+                                    width: 220.w,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
@@ -431,8 +431,8 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                           Row(
                                             children: [
                                               SizedBox(
-                                                width: 60,
-                                                height: 60,
+                                                width: 48.w,
+                                                height: 48.w,
                                                 child: AppIconHeader(
                                                   padding: EdgeInsets.zero,
                                                   packageName:

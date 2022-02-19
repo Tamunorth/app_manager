@@ -20,8 +20,10 @@ class LocalAppChannel implements AppChannel {
       // Log.e('port -> $port');
       return port;
     }
-    port = await ApplibUtil.port;
-    Log.w('成功获取 LocalAppChannel port -> $port');
+    String data =
+        await File(RuntimeEnvir.filesPath + '/server_port').readAsString();
+    port = int.tryParse(data);
+    Log.w('成功获ß取 LocalAppChannel port -> $port');
     return port;
   }
 
@@ -139,7 +141,7 @@ class LocalAppChannel implements AppChannel {
         }
         Log.i('shouldRead : ${buffer.first}');
         if (buffer.length != buffer.first) {
-          int needAppend = buffer.first - buffer.length-1;
+          int needAppend = buffer.first - buffer.length - 1;
           Log.i('needAppend : $needAppend');
           Log.i('list.length : ${list.length}');
           int souldTake = min(needAppend, list.length);
@@ -148,7 +150,7 @@ class LocalAppChannel implements AppChannel {
           Log.i('buffer.length : ${buffer.length}');
           list = list.sublist(souldTake + 1);
         }
-        if (buffer.length == buffer.first+1) {
+        if (buffer.length == buffer.first + 1) {
           int index = buffer.indexOf(58);
           String package = utf8.decode(buffer.sublist(1, index));
           Log.i('package : $package');
