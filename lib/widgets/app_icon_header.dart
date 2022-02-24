@@ -93,9 +93,12 @@ class _AppIconHeaderState extends State<AppIconHeader> {
             Uint8List.fromList(IconStore().loadCache(widget.packageName));
         if (byte.isEmpty) {
           return SizedBox(
-            width: 54,
-            height: 54,
-            child: Icon(Icons.image),
+            width: 32,
+            height: 32,
+            child: Icon(
+              Icons.image,
+              size: 12,
+            ),
           );
         }
         child = SizedBox(
@@ -104,8 +107,8 @@ class _AppIconHeaderState extends State<AppIconHeader> {
             gaplessPlayback: true,
             errorBuilder: (_, __, ___) {
               return SizedBox(
-                width: 54,
-                height: 54,
+                width: 32,
+                height: 32,
                 child: SpinKitDoubleBounce(
                   color: Colors.indigo,
                   size: 16.0,
