@@ -8,6 +8,7 @@ import 'package:app_manager/core/foundation/protocol.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
 import 'package:app_manager/global/icon_store.dart';
+import 'package:app_manager/utils/http/http.dart';
 import 'package:app_manager/utils/socket_util.dart';
 import 'package:applib_util/applib_util.dart';
 import 'package:flutter/foundation.dart';
@@ -15,15 +16,19 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
 class LocalAppChannel implements AppChannel {
-  Future<int> getPort() async {
+  @override
+  int port;
+
+  int getPort() {
     if (port != null) {
       // Log.e('port -> $port');
       return port;
     }
-    String data =
-        await File(RuntimeEnvir.filesPath + '/server_port').readAsString();
+    String data = File(
+      RuntimeEnvir.filesPath + '/server_port',
+    ).readAsStringSync();
     port = int.tryParse(data);
-    Log.w('成功获ß取 LocalAppChannel port -> $port');
+    Log.w('成功获取 LocalAppChannel port -> $port');
     return port;
   }
 
@@ -31,15 +36,17 @@ class LocalAppChannel implements AppChannel {
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
     Stopwatch watch = Stopwatch();
     watch.start();
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    // Log.w('等待连接');
-    await manager.connect();
-    // Log.w('连接成功');
-    manager.sendMsg(Protocol.getAllAppInfo + (isSystemApp ? '1' : '0') + '\n');
-    final List<String> infos = (await manager.getString()).split('\n');
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.getAllAppInfo}',
+      queryParameters: {
+        'is_system_app': isSystemApp,
+      },
+    ))
+        .data
+        .toString();
+    final List<String> infos = (result).split('\n');
     Log.e('watch -> ${watch.elapsed}');
-    // Log.e('infos -> $infos');
+    Log.e('infos -> $infos');
     final List<AppInfo> entitys = <AppInfo>[];
     for (int i = 0; i < infos.length; i++) {
       List<String> infoList = infos[i].split('\r');
@@ -62,109 +69,114 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<String> getAppDetails(String package) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    // Log.w('等待连接');
-    await manager.connect();
-    // Log.w('连接成功');
-    manager.sendMsg(Protocol.getAppDetail + package + '\n');
-    final String result = (await manager.getString());
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.getAppDetail}',
+      queryParameters: {
+        'package': package,
+      },
+    ))
+        .data
+        .toString();
     return result;
   }
 
   @override
   Future<List<String>> getAppActivitys(String package) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    // Log.w('等待连接');
-    await manager.connect();
-    // Log.w('连接成功');
-    manager.sendMsg(Protocol.getAppActivity + package + '\n');
-    final List<String> infos = (await manager.getString()).split('\n');
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.getAppActivity}',
+      queryParameters: {
+        'package': package,
+      },
+    ))
+        .data
+        .toString();
+    final List<String> infos = result.split('\n');
     infos.removeLast();
     return infos;
   }
 
   @override
   Future<List<String>> getAppPermission(String package) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    // Log.w('等待连接');
-    await manager.connect();
-    // Log.w('连接成功');
-    manager.sendMsg(Protocol.getAppPermissions + package + '\n');
-    final List<String> infos = (await manager.getString()).split('\r');
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.getAppPermissions}',
+      queryParameters: {
+        'package': package,
+      },
+    ))
+        .data
+        .toString();
+    final List<String> infos = result.split('\r');
     infos.removeLast();
     return infos;
   }
 
   @override
   Future<List<int>> getAppIconBytes(String packageName) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    await manager.connect();
-    manager.sendMsg(Protocol.getIconData + '$packageName\n');
-    List<int> result = await manager.getResult();
-    // Log.w(result);
-    return result;
+    // SocketWrapper manager =
+    //     SocketWrapper(InternetAddress.anyIPv4, await getPort());
+    // await manager.connect();
+    // manager.sendMsg(Protocol.getIconData + '$packageName\n');
+    // List<int> result = await manager.getResult();
+    // // Log.w(result);
+    // return result;
   }
 
   @override
   Future<List<List<int>>> getAllAppIconBytes(List<String> packages) async {
-    SocketWrapper manager = SocketWrapper(
-      InternetAddress.anyIPv4,
-      await getPort(),
-    );
-    await manager.connect();
-    manager.sendMsg(Protocol.getIconDatas + packages.join(' ') + '\n');
-    String package = '';
-    List<int> buffer = [];
-    Completer lock = Completer();
-    bool bufferIsIcon = false;
-    IconController controller = Get.find();
-    bool isBreak = false;
-    Stream<Uint8List> stream = manager.mStream;
+    // SocketWrapper manager = SocketWrapper(
+    //   InternetAddress.anyIPv4,
+    //   await getPort(),
+    // );
+    // await manager.connect();
+    // manager.sendMsg(Protocol.getIconDatas + packages.join(' ') + '\n');
+    // String package = '';
+    // List<int> buffer = [];
+    // Completer lock = Completer();
+    // bool bufferIsIcon = false;
+    // IconController controller = Get.find();
+    // bool isBreak = false;
+    // Stream<Uint8List> stream = manager.mStream;
 
-    stream.listen((event) {
-      // BytesBuilder bytesBuilder = BytesBuilder();
-      // bytesBuilder.add(event);
-      // ByteBuffer byteBuffer = bytesBuilder.takeBytes().buffer;
-      // byteBuffer.asByteData().
-      Uint8List list = Uint8List.fromList(event);
-      while (list.isNotEmpty) {
-        if (buffer.isEmpty) {
-          Log.i('list : ${list}');
-          int packLength =
-              list[0] << 24 | list[1] << 16 | list[2] << 8 | list[3];
-          buffer.add(packLength);
-          list = list.sublist(4);
-        }
-        Log.i('shouldRead : ${buffer.first}');
-        if (buffer.length != buffer.first) {
-          int needAppend = buffer.first - buffer.length - 1;
-          Log.i('needAppend : $needAppend');
-          Log.i('list.length : ${list.length}');
-          int souldTake = min(needAppend, list.length);
-          buffer.addAll(list.take(souldTake));
-          Log.i('buffer : $buffer');
-          Log.i('buffer.length : ${buffer.length}');
-          list = list.sublist(souldTake + 1);
-        }
-        if (buffer.length == buffer.first + 1) {
-          int index = buffer.indexOf(58);
-          String package = utf8.decode(buffer.sublist(1, index));
-          Log.i('package : $package');
-          List<int> iconByte = buffer.sublist(index + 1);
-          Log.i('iconByte : $iconByte');
-          IconStore().cache(package, iconByte);
-          controller.update();
-          buffer.clear();
-        }
-      }
-    }, onDone: () {
-      lock.complete();
-    });
-    await lock.future;
+    // stream.listen((event) {
+    //   // BytesBuilder bytesBuilder = BytesBuilder();
+    //   // bytesBuilder.add(event);
+    //   // ByteBuffer byteBuffer = bytesBuilder.takeBytes().buffer;
+    //   // byteBuffer.asByteData().
+    //   Uint8List list = Uint8List.fromList(event);
+    //   while (list.isNotEmpty) {
+    //     if (buffer.isEmpty) {
+    //       Log.i('list : ${list}');
+    //       int packLength =
+    //           list[0] << 24 | list[1] << 16 | list[2] << 8 | list[3];
+    //       buffer.add(packLength);
+    //       list = list.sublist(4);
+    //     }
+    //     Log.i('shouldRead : ${buffer.first}');
+    //     if (buffer.length != buffer.first) {
+    //       int needAppend = buffer.first - buffer.length - 1;
+    //       Log.i('needAppend : $needAppend');
+    //       Log.i('list.length : ${list.length}');
+    //       int souldTake = min(needAppend, list.length);
+    //       buffer.addAll(list.take(souldTake));
+    //       Log.i('buffer : $buffer');
+    //       Log.i('buffer.length : ${buffer.length}');
+    //       list = list.sublist(souldTake + 1);
+    //     }
+    //     if (buffer.length == buffer.first + 1) {
+    //       int index = buffer.indexOf(58);
+    //       String package = utf8.decode(buffer.sublist(1, index));
+    //       Log.i('package : $package');
+    //       List<int> iconByte = buffer.sublist(index + 1);
+    //       Log.i('iconByte : $iconByte');
+    //       IconStore().cache(package, iconByte);
+    //       controller.update();
+    //       buffer.clear();
+    //     }
+    //   }
+    // }, onDone: () {
+    //   lock.complete();
+    // });
+    // await lock.future;
     // List<int> allBytes = await manager.getResult();
     // List<List<int>> byteList = [];
     // byteList.length = packages.length;
@@ -271,17 +283,16 @@ class LocalAppChannel implements AppChannel {
   }
 
   @override
-  int port;
-
-  @override
   Future<List<AppInfo>> getAppInfos(List<String> packages) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    // Log.w('等待连接');
-    await manager.connect();
-    // Log.w('连接成功');
-    manager.sendMsg(Protocol.getAppInfos + packages.join(' ') + '\n');
-    final List<String> infos = (await manager.getString()).split('\n');
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.getAppInfos}',
+      queryParameters: {
+        'apps': packages,
+      },
+    ))
+        .data
+        .toString();
+    final List<String> infos = result.split('\n');
     final List<AppInfo> entitys = <AppInfo>[];
     for (int i = 0; i < infos.length; i++) {
       List<String> infoList = infos[i].split('\r');

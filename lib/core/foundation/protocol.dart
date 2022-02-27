@@ -1,11 +1,14 @@
 class Protocol {
-  static String getIconData = 'getIconData:';
-  static String getIconDatas = 'getIconDatas:';
-  static String getAllAppInfo = 'getAllAppInfo:';
-  static String getAppInfos = 'getAppInfos:';
-  static String getAppActivity = 'getAppActivity:';
-  static String getAppPermissions = 'getAppPermissions:';
-  static String getAppDetail = 'getAppDetail:';
-  static String getAppMainActivity = 'getAppMainActivity:';
-  static String openAppByPackage = 'openAppByPackage:';
+  // 获得某个 package 的图标信息
+  static final String getIconData = "icon";
+  // 获得所有的 app 基本信息
+  static final String getAllAppInfo = "allappinfo";
+  // 获得给定的 app 的基本信息
+  static final String getAppInfos = "appinfos";
+  static final String getAppActivity = "appactivity";
+  static final String getAppPermissions = "apppermission";
+  static final String getAppDetail = "appdetail";
+  static final String getAppMainActivity = "appmainactivity";
+  static final String openAppByPackage = "openapp";
+  static final String checkToken = "check";
 }

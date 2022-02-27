@@ -77,10 +77,12 @@ class SocketWrapper {
     mStream.listen((event) {
       tmp.addAll(event);
     }, onDone: () {
+      if (!completer.isCompleted) {
+        completer.complete(utf8.decode(tmp));
+      }
       // Log.w('stream down');
-      completer.complete(utf8.decode(tmp));
     });
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    Future.delayed(const Duration(milliseconds: 6000), () {
       if (!completer.isCompleted) {
         completer.complete();
       }
@@ -97,6 +99,7 @@ class SocketWrapper {
       debugPrint('e=${e.toString()}');
     }
   }
+
   void sendByte(List<int> bytes) {
     //给服务器发消息
     try {

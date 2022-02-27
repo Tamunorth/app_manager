@@ -172,9 +172,6 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
           },
         ),
         floatingActionButton: GetBuilder<CheckController>(builder: (_) {
-          Scrollable(
-            physics: NeverScrollableScrollPhysics(),
-          );
           if (checkController.check.length > 1) {
             return FloatingActionButton(
               child: const Icon(Icons.more_vert),

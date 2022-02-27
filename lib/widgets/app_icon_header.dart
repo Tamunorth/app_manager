@@ -30,7 +30,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
   void initState() {
     super.initState();
     iconController.addListener(loadAppIcon);
-    loadAppIcon();
+    // loadAppIcon();
   }
 
   Future<void> loadAppIcon() async {
@@ -76,6 +76,19 @@ class _AppIconHeaderState extends State<AppIconHeader> {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: widget.padding,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(8.w),
+        child: Image.network(
+          'http://127.0.0.1:${Global().appChannel.port}/icon/${widget.packageName}',
+          gaplessPlayback: true,
+          errorBuilder: (_, __, ___) {
+            return Image.asset('assets/placeholder.png');
+          },
+        ),
+      ),
+    );
     if (!prepare) {
       return SizedBox(
         width: 54,
@@ -96,7 +109,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
             width: 32,
             height: 32,
             child: Icon(
-              Icons.image,
+              Icons.adb,
               size: 12,
             ),
           );

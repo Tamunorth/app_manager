@@ -13,6 +13,8 @@ dependencies:
   android_intent_plus: ^1.0.2
   # Flutter 的一些动画
   flutter_spinkit: "^4.1.2"
+
+  dio: ^4.0.0
   shortcut: ^0.0.1
   path: ^1.8.0
   get: ^4.1.3
@@ -37,10 +39,10 @@ flutter:
   assets:
     - assets/
     
-# dependency_overrides:
+dependency_overrides:
 #   global_repository:
 #     path: /Users/nightmare/Desktop/nightmare-space/global_repository
-#   apputils:
-#     path: /Users/nightmare/Desktop/nightmare-space/apputils
+  applib_util:
+    path: /Users/nightmare/Desktop/nightmare-space/applib/applib_util
 #   adbutil:
 #     path: /Users/nightmare/Desktop/nightmare-space/adbutil
