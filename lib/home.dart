@@ -36,13 +36,6 @@ class AppManagerEntryPoint extends StatefulWidget {
     if (Get.arguments != null) {
       Global().process = Get.arguments;
     }
-    if (RuntimeEnvir.packageName != Config.packageName) {
-      // 如果这个项目是独立运行的，那么RuntimeEnvir.packageName会在main函数中被设置成Config.packageName
-      Config.flutterPackage = Config.flutterPackagePrifix;
-      Get.addPages(AppPages.routes);
-      // 避免没有注册到依赖
-      AppManagerBinding().dependencies();
-    } else {}
   }
   final Executable process;
   @override

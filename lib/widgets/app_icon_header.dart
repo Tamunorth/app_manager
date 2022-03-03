@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:app_manager/controller/icon_controller.dart';
+import 'package:app_manager/core/interface/app_channel.dart';
+import 'package:app_manager/global/config.dart';
 import 'package:app_manager/global/global.dart';
 import 'package:app_manager/global/icon_store.dart';
 import 'package:app_manager/utils/app_utils.dart';
@@ -14,9 +16,12 @@ class AppIconHeader extends StatefulWidget {
     Key key,
     this.packageName,
     this.padding = const EdgeInsets.all(8.0),
+    @required this.channel,
   }) : super(key: key);
   final String packageName;
   final EdgeInsets padding;
+  final AppChannel channel;
+
   @override
   _AppIconHeaderState createState() => _AppIconHeaderState();
 }
@@ -81,10 +86,11 @@ class _AppIconHeaderState extends State<AppIconHeader> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.w),
         child: Image.network(
-          'http://127.0.0.1:${Global().appChannel.port}/icon/${widget.packageName}',
+          'http://127.0.0.1:${widget.channel?.port ?? Global().appChannel.port}/icon/${widget.packageName}',
           gaplessPlayback: true,
           errorBuilder: (_, __, ___) {
-            return Image.asset('assets/placeholder.png');
+            return Image.asset(
+                '${Config.flutterPackage}assets/placeholder.png');
           },
         ),
       ),
