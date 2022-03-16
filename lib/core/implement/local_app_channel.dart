@@ -36,7 +36,7 @@ class LocalAppChannel implements AppChannel {
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
     Stopwatch watch = Stopwatch();
     watch.start();
-    String result = (await httpInstance.get<String>(
+    final result = (await httpInstance.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.getAllAppInfo}',
       queryParameters: {
         'is_system_app': isSystemApp,
@@ -312,4 +312,6 @@ class LocalAppChannel implements AppChannel {
     }
     return entitys;
   }
+
+  
 }
