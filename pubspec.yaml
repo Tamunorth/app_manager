@@ -42,7 +42,7 @@ flutter:
 dependency_overrides:
 #   global_repository:
 #     path: /Users/nightmare/Desktop/nightmare-space/global_repository
-  # applib_util:
-  #   path: /Users/nightmare/Desktop/nightmare-space/applib/applib_util
+  applib_util:
+    path: /Users/nightmare/Desktop/nightmare-space/applib/applib_util
 #   adbutil:
 #     path: /Users/nightmare/Desktop/nightmare-space/adbutil

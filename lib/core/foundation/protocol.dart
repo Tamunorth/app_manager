@@ -1,14 +1,15 @@
 class Protocol {
+  Protocol._();
   // 获得某个 package 的图标信息
-  static final String getIconData = "icon";
+  static const String getIconData = "icon";
   // 获得所有的 app 基本信息
-  static final String getAllAppInfo = "allappinfo";
+  static const String getAllAppInfo = "allappinfo";
   // 获得给定的 app 的基本信息
-  static final String getAppInfos = "appinfos";
-  static final String getAppActivity = "appactivity";
-  static final String getAppPermissions = "apppermission";
-  static final String getAppDetail = "appdetail";
-  static final String getAppMainActivity = "appmainactivity";
-  static final String openAppByPackage = "openapp";
-  static final String checkToken = "check";
+  static const String getAppInfos = "appinfos";
+  static const String getAppActivity = "appactivity";
+  static const String getAppPermissions = "apppermission";
+  static const String getAppDetail = "appdetail";
+  static const String getAppMainActivity = "appmainactivity";
+  static const String openAppByPackage = "openapp";
+  static const String checkToken = "check";
 }

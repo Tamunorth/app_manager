@@ -46,7 +46,6 @@ class LocalAppChannel implements AppChannel {
         .toString();
     final List<String> infos = (result).split('\n');
     Log.e('watch -> ${watch.elapsed}');
-    Log.e('infos -> $infos');
     final List<AppInfo> entitys = <AppInfo>[];
     for (int i = 0; i < infos.length; i++) {
       List<String> infoList = infos[i].split('\r');
@@ -80,6 +79,20 @@ class LocalAppChannel implements AppChannel {
     return result;
   }
 
+  @override
+  Future<String> getAppMainActivity(String packageName) async {
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.getAppMainActivity}',
+      queryParameters: {
+        'package': packageName,
+      },
+    ))
+        .data
+        .toString();
+    Log.e('getAppMainActivity $result');
+    return result;
+  }
+  
   @override
   Future<List<String>> getAppActivitys(String package) async {
     String result = (await httpInstance.get<String>(
@@ -240,16 +253,6 @@ class LocalAppChannel implements AppChannel {
     return result.isNotEmpty;
   }
 
-  @override
-  Future<String> getAppMainActivity(String packageName) async {
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    await manager.connect();
-    manager.sendMsg(Protocol.getAppMainActivity + packageName + '\n');
-    final String result = (await manager.getString());
-    Log.e('getAppMainActivity $result');
-    return result;
-  }
 
   // @override
   // Future<void> launchActivity(
@@ -267,14 +270,14 @@ class LocalAppChannel implements AppChannel {
   // }
 
   @override
-  Future<void> openApp(String packageName) async {
-    Log.e('openApp $packageName');
-    SocketWrapper manager =
-        SocketWrapper(InternetAddress.anyIPv4, await getPort());
-    // Log.w('等待连接');
-    await manager.connect();
-    // Log.w('连接成功');
-    manager.sendMsg(Protocol.openAppByPackage + packageName + '\n');
+  Future<void> openApp(String packageName, String activity) async {
+    (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/${Protocol.openAppByPackage}',
+      queryParameters: {
+        'package': packageName,
+        'activity': activity,
+      },
+    ));
   }
 
   @override
@@ -312,6 +315,4 @@ class LocalAppChannel implements AppChannel {
     }
     return entitys;
   }
-
-  
 }

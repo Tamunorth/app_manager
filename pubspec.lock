@@ -20,11 +20,9 @@ packages:
   applib_util:
     dependency: "direct main"
     description:
-      path: applib_util
-      ref: HEAD
-      resolved-ref: "3cd67f676f72b8ffb92dbb4b8a005aaff0ef3590"
-      url: "https://github.com/nightmare-space/applib"
-    source: git
+      path: "/Users/nightmare/Desktop/nightmare-space/applib/applib_util"
+      relative: false
+    source: path
     version: "0.0.1"
   async:
     dependency: transitive

@@ -8,10 +8,9 @@ import 'local_app_channel.dart';
 class RemoteAppChannel extends LocalAppChannel {
   String serial;
   @override
-  Future<void> openApp(String packageName) async {
+  Future<void> openApp(String packageName, String activity) async {
     Log.e('openApp $packageName');
-    String mainClass = await getAppMainActivity(packageName);
-    execCmd('adb -s $serial shell am start -n $packageName/$mainClass');
+    execCmd('adb -s $serial shell am start -n $packageName/$activity');
   }
 
   // @override

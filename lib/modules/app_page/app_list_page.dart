@@ -1,3 +1,4 @@
+import 'package:app_manager/controller/app_manager_controller.dart';
 import 'package:app_manager/model/app.dart';
 import 'package:app_manager/page/app_setting_page.dart';
 import 'package:app_manager/controller/check_controller.dart';
@@ -82,6 +83,8 @@ class AppItem extends StatefulWidget {
 
 class _AppItemState extends State<AppItem> {
   CheckController checkController = Get.find();
+  AppManagerController am = Get.find();
+
   handleOnTap() {
     AppInfo entity = widget.entity;
     final check = checkController.check;
@@ -165,6 +168,7 @@ class _AppItemState extends State<AppItem> {
                         child: AppIconHeader(
                           key: Key(entity.packageName),
                           packageName: entity.packageName,
+                          channel: am.curChannel,
                         ),
                       ),
                       Expanded(

@@ -142,9 +142,11 @@ class _AppSettingPageState extends State<AppSettingPage> {
                         //   await Global().exec(
                         //       'am start -n ${widget.apps[0].packageName}/$activityName');
                         // }
-                        Log.e(Global().appChannel.runtimeType);
-                        AppChannel appChannel = Global().appChannel;
-                        appChannel.openApp(entity.packageName);
+                        AppManagerController controller = Get.find();
+                        String activity = await controller.channel
+                            .getAppMainActivity(entity.packageName);
+                        controller.channel
+                            .openApp(entity.packageName, activity);
                         // String className = await Global()
                         //     .appChannel
                         //     .getAppMainActivity(entity.packageName);
