@@ -7,7 +7,6 @@ import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/core/foundation/protocol.dart';
 import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
-import 'package:app_manager/global/icon_store.dart';
 import 'package:app_manager/utils/http/http.dart';
 import 'package:app_manager/utils/socket_util.dart';
 import 'package:applib_util/applib_util.dart';

@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:android_intent_plus/android_intent.dart';
@@ -28,8 +29,10 @@ class AppSettingPage extends StatefulWidget {
   const AppSettingPage({
     Key key,
     @required this.entity,
+    this.offset = const Offset(0, 0),
   }) : super(key: key);
   final AppInfo entity;
+  final Offset offset;
 
   @override
   _AppSettingPageState createState() => _AppSettingPageState();
@@ -98,7 +101,6 @@ class _AppSettingPageState extends State<AppSettingPage> {
     }
     controller.update();
   }
-
   @override
   Widget build(BuildContext context) {
     AppInfo entity = widget.entity;
@@ -107,177 +109,197 @@ class _AppSettingPageState extends State<AppSettingPage> {
       onTap: () {
         Navigator.of(context).pop();
       },
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 6.0,
-          sigmaY: 6.0,
-        ),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Material(
-                borderRadius: BorderRadius.circular(16.w),
-                color: Colors.white,
+      child: SafeArea(
+        child: Stack(
+          children: [
+            Positioned.fill(
+              top: min(
+                widget.offset.dy,
+                MediaQuery.of(context).size.height - 520,
+              ),
+              left: min(
+                widget.offset.dx,
+                MediaQuery.of(context).size.width - 200 - 8,
+              ),
+              child: Align(
+                alignment: Alignment.centerLeft,
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
+                  width: 200,
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        height: 8,
-                      ),
-                      Center(
-                        child: Container(
-                          width: 80,
-                          height: 6,
-                          decoration: BoxDecoration(
-                            color: AppColors.contentBorder,
-                            borderRadius: BorderRadius.circular(12),
+                      Material(
+                        borderRadius: BorderRadius.circular(16.w),
+                        color: Colors.white,
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Column(
+                            children: [
+                              // Center(
+                              //   child: Container(
+                              //     width: 80,
+                              //     height: 6,
+                              //     decoration: BoxDecoration(
+                              //       color: AppColors.contentBorder,
+                              //       borderRadius: BorderRadius.circular(12),
+                              //     ),
+                              //   ),
+                              // ),
+                              buildItem('打开', onTap: () async {
+                                // if (GetPlatform.isDesktop) {
+                                //   await Global().exec(
+                                //       'am start -n ${widget.apps[0].packageName}/$activityName');
+                                // }
+                                AppManagerController controller = Get.find();
+                                String activity = await controller.channel
+                                    .getAppMainActivity(entity.packageName);
+                                controller.channel
+                                    .openApp(entity.packageName, activity);
+                                // String className = await Global()
+                                //     .appChannel
+                                //     .getAppMainActivity(entity.packageName);
+                                // Log.w(className);
+                                // Global().appChannel.launchActivity(
+                                //       entity.packageName,
+                                //       className,
+                                //     );
+                                // Log.w('activityName -> $activityName');
+                                // final AndroidIntent intent = AndroidIntent(
+                                //   action: 'android.intent.action.MAIN',
+                                //   package: entity.packageName,
+                                //   componentName: activityName,
+                                //   category: 'android.intent.category.LAUNCHER',
+                                // );
+                                // intent.launch();
+                              }),
+                              buildItem('应用详情', onTap: () async {
+                                Get.back();
+                                final AndroidIntent intent = AndroidIntent(
+                                  // NEW TASK
+                                  flags: [0x10000000],
+                                  action: 'action_application_details_settings',
+                                  data: 'package:${entity.packageName}',
+                                );
+                                intent.launch();
+                              }),
+                              buildItem('备份', danger: false, onTap: () {
+                                Get.back();
+                                CheckController checkController = Get.find();
+                                if (checkController.check.isEmpty) {
+                                  Get.bottomSheet(BackupSheet(
+                                    entitys: [entity],
+                                  ));
+                                } else {
+                                  Get.bottomSheet(BackupSheet(
+                                    entitys: checkController.check,
+                                  ));
+                                }
+                                // AppUtils.clearAppData(entity.packageName);
+                              }),
+                              buildItem('清除App数据', danger: true, onTap: () {
+                                Global()
+                                    .appChannel
+                                    .clearAppData(entity.packageName);
+                              }),
+                              buildItem('卸载', danger: true, onTap: () async {
+                                await Global()
+                                    .appChannel
+                                    .unInstallApp(entity.packageName);
+
+                                AppManagerController controller = Get.find();
+                                controller.removeEntity(entity);
+                                controller.update();
+                              }),
+                              Builder(builder: (_) {
+                                if (entity.freeze) {
+                                  return buildItem('解冻', danger: false,
+                                      onTap: () async {
+                                    await Global()
+                                        .appChannel
+                                        .unFreezeApp(entity.packageName);
+                                    entity.freeze = false;
+                                    setState(() {});
+                                    AppManagerController controller =
+                                        Get.find();
+                                    controller.update();
+                                  });
+                                }
+                                return buildItem('冻结', danger: true,
+                                    onTap: () async {
+                                  bool success = await Global()
+                                      .appChannel
+                                      .freezeApp(entity.packageName);
+                                  if (success) {
+                                    entity.freeze = true;
+                                    setState(() {});
+                                    AppManagerController controller =
+                                        Get.find();
+                                    controller.update();
+                                  } else {
+                                    showToast(
+                                        '禁用失败,当前root状态${await Global().process.isRoot()}');
+                                  }
+                                });
+                              }),
+                              Builder(builder: (_) {
+                                if (entity.hide) {
+                                  return buildItem('显示', danger: false,
+                                      onTap: () async {
+                                    bool success = await Global()
+                                        .appChannel
+                                        .showApp(entity.packageName);
+                                    if (success) {
+                                      entity.hide = false;
+                                      setState(() {});
+                                      AppManagerController controller =
+                                          Get.find();
+                                      controller.update();
+                                    } else {
+                                      showToast(
+                                          '显示失败,当前root状态${await Global().process.isRoot()}');
+                                    }
+                                  });
+                                }
+                                return buildItem('隐藏', danger: true,
+                                    onTap: () async {
+                                  bool success = await Global()
+                                      .appChannel
+                                      .hideApp(entity.packageName);
+                                  if (success) {
+                                    entity.hide = true;
+                                    setState(() {});
+                                    AppManagerController controller =
+                                        Get.find();
+                                    controller.update();
+                                  } else {
+                                    showToast(
+                                        '隐藏失败,当前root状态${await Global().process.isRoot()}');
+                                  }
+                                });
+                              }),
+                              buildItem('查看详细信息', danger: false, onTap: () {
+                                Get.back();
+                                push(AppInfoDetailPage(
+                                  entity: widget.entity,
+                                ));
+                                // AppUtils.clearAppData(entity.packageName);
+                              }),
+                              buildItem('分享', danger: false, onTap: () {
+                                Get.back();
+                                PluginUtils.shareFile(widget.entity.apkPath);
+                              }),
+                            ],
                           ),
                         ),
                       ),
-                      buildItem('打开', onTap: () async {
-                        // if (GetPlatform.isDesktop) {
-                        //   await Global().exec(
-                        //       'am start -n ${widget.apps[0].packageName}/$activityName');
-                        // }
-                        AppManagerController controller = Get.find();
-                        String activity = await controller.channel
-                            .getAppMainActivity(entity.packageName);
-                        controller.channel
-                            .openApp(entity.packageName, activity);
-                        // String className = await Global()
-                        //     .appChannel
-                        //     .getAppMainActivity(entity.packageName);
-                        // Log.w(className);
-                        // Global().appChannel.launchActivity(
-                        //       entity.packageName,
-                        //       className,
-                        //     );
-                        // Log.w('activityName -> $activityName');
-                        // final AndroidIntent intent = AndroidIntent(
-                        //   action: 'android.intent.action.MAIN',
-                        //   package: entity.packageName,
-                        //   componentName: activityName,
-                        //   category: 'android.intent.category.LAUNCHER',
-                        // );
-                        // intent.launch();
-                      }),
-                      buildItem('应用详情', onTap: () async {
-                        Get.back();
-                        final AndroidIntent intent = AndroidIntent(
-                          // NEW TASK
-                          flags: [0x10000000],
-                          action: 'action_application_details_settings',
-                          data: 'package:${entity.packageName}',
-                        );
-                        intent.launch();
-                      }),
-                      buildItem('备份', danger: false, onTap: () {
-                        Get.back();
-                        CheckController checkController = Get.find();
-                        if (checkController.check.isEmpty) {
-                          Get.bottomSheet(BackupSheet(
-                            entitys: [entity],
-                          ));
-                        } else {
-                          Get.bottomSheet(BackupSheet(
-                            entitys: checkController.check,
-                          ));
-                        }
-                        // AppUtils.clearAppData(entity.packageName);
-                      }),
-                      buildItem('清除App数据', danger: true, onTap: () {
-                        Global().appChannel.clearAppData(entity.packageName);
-                      }),
-                      buildItem('卸载', danger: true, onTap: () async {
-                        await Global()
-                            .appChannel
-                            .unInstallApp(entity.packageName);
-
-                        AppManagerController controller = Get.find();
-                        controller.removeEntity(entity);
-                        controller.update();
-                      }),
-                      Builder(builder: (_) {
-                        if (entity.freeze) {
-                          return buildItem('解冻', danger: false,
-                              onTap: () async {
-                            await Global()
-                                .appChannel
-                                .unFreezeApp(entity.packageName);
-                            entity.freeze = false;
-                            setState(() {});
-                            AppManagerController controller = Get.find();
-                            controller.update();
-                          });
-                        }
-                        return buildItem('冻结', danger: true, onTap: () async {
-                          bool success = await Global()
-                              .appChannel
-                              .freezeApp(entity.packageName);
-                          if (success) {
-                            entity.freeze = true;
-                            setState(() {});
-                            AppManagerController controller = Get.find();
-                            controller.update();
-                          } else {
-                            showToast(
-                                '禁用失败,当前root状态${await Global().process.isRoot()}');
-                          }
-                        });
-                      }),
-                      Builder(builder: (_) {
-                        if (entity.hide) {
-                          return buildItem('显示', danger: false,
-                              onTap: () async {
-                            bool success = await Global()
-                                .appChannel
-                                .showApp(entity.packageName);
-                            if (success) {
-                              entity.hide = false;
-                              setState(() {});
-                              AppManagerController controller = Get.find();
-                              controller.update();
-                            } else {
-                              showToast(
-                                  '显示失败,当前root状态${await Global().process.isRoot()}');
-                            }
-                          });
-                        }
-                        return buildItem('隐藏', danger: true, onTap: () async {
-                          bool success = await Global()
-                              .appChannel
-                              .hideApp(entity.packageName);
-                          if (success) {
-                            entity.hide = true;
-                            setState(() {});
-                            AppManagerController controller = Get.find();
-                            controller.update();
-                          } else {
-                            showToast(
-                                '隐藏失败,当前root状态${await Global().process.isRoot()}');
-                          }
-                        });
-                      }),
-                      buildItem('查看详细信息', danger: false, onTap: () {
-                        Get.back();
-                        push(AppInfoDetailPage(
-                          entity: widget.entity,
-                        ));
-                        // AppUtils.clearAppData(entity.packageName);
-                      }),
-                      buildItem('分享', danger: false, onTap: () {
-                        Get.back();
-                        PluginUtils.shareFile(widget.entity.apkPath);
-                      }),
                     ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

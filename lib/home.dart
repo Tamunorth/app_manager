@@ -60,7 +60,6 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: const Color(0xfff5f5f7),
       body: SafeArea(
         child: Column(
           children: [
@@ -103,8 +102,8 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
                       appList: ctl.sysApps,
                       filter: filter.toLowerCase(),
                     ),
-                    const MarkPage(),
-                    const BackupListPage(),
+                    // const MarkPage(),
+                    // const BackupListPage(),
                   ][_currentIndex],
                 );
               }),
@@ -129,20 +128,20 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
             ),
             label: '系统',
           ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              '${Config.flutterPackage}assets/market1.svg',
-              width: 24,
-            ),
-            label: '收藏',
-          ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              '${Config.flutterPackage}assets/backup2.svg',
-              width: 24,
-            ),
-            label: '备份',
-          ),
+          // BottomNavigationBarItem(
+          //   icon: SvgPicture.asset(
+          //     '${Config.flutterPackage}assets/market1.svg',
+          //     width: 24,
+          //   ),
+          //   label: '收藏',
+          // ),
+          // BottomNavigationBarItem(
+          //   icon: SvgPicture.asset(
+          //     '${Config.flutterPackage}assets/backup2.svg',
+          //     width: 24,
+          //   ),
+          //   label: '备份',
+          // ),
         ],
         unselectedItemColor: Colors.grey,
         selectedItemColor: Colors.indigo,
@@ -162,18 +161,18 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
           setState(() {});
         },
       ),
-      floatingActionButton: GetBuilder<CheckController>(builder: (_) {
-        if (checkController.check.length > 1) {
-          return FloatingActionButton(
-            child: const Icon(Icons.more_vert),
-            onPressed: () {
-              Get.bottomSheet(const LongPress());
-            },
-          );
-        } else {
-          return const SizedBox();
-        }
-      }),
+      // floatingActionButton: GetBuilder<CheckController>(builder: (_) {
+      //   if (checkController.check.length > 1) {
+      //     return FloatingActionButton(
+      //       child: const Icon(Icons.more_vert),
+      //       onPressed: () {
+      //         Get.bottomSheet(const LongPress());
+      //       },
+      //     );
+      //   } else {
+      //     return const SizedBox();
+      //   }
+      // }),
     );
   }
 }

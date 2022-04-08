@@ -14,7 +14,7 @@ class SearchBox extends StatelessWidget {
         fontWeight: FontWeight.bold,
       ),
       decoration: InputDecoration(
-        fillColor: const Color(0xffeeeeee),
+        fillColor: Theme.of(context).primaryColor.withOpacity(0.08),
         hintText: '搜索',
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
