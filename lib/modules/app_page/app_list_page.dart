@@ -5,6 +5,7 @@ import 'package:app_manager/page/app_setting_page.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:app_manager/theme/app_colors.dart';
 import 'package:app_manager/widgets/app_icon_header.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -126,7 +127,7 @@ class _AppItemState extends State<AppItem> {
     );
   }
 
-  Offset offset;
+  Offset offset = const Offset(0.0, 0.0);
   @override
   Widget build(BuildContext context) {
     AppInfo entity = widget.entity;
@@ -144,103 +145,101 @@ class _AppItemState extends State<AppItem> {
               offset: offset,
             ));
           },
-          child: GestureDetector(
-            onTap: handleOnTap,
-            behavior: HitTestBehavior.translucent,
-            onPanDown: (details) {
-              offset = details.globalPosition;
+          child: Listener(
+            onPointerDown: (PointerDownEvent event) {
+              if (event.kind == PointerDeviceKind.mouse &&
+                  event.buttons == kSecondaryMouseButton) {
+                Get.dialog(AppSettingPage(
+                  entity: entity,
+                  offset: offset,
+                ));
+              }
             },
-            // onLongPress: () {
-            //   Get.dialog(AppSettingPage(
-            //     entity: entity,
-            //   ));
-            //   // Get.bottomSheet(
-            //   //   AppSettingPage(
-            //   //     entity: entity,
-            //   //   ),
-            //   //   isScrollControlled: true,
-            //   // );
-            //   // push(AppSettingPage(
-            //   //   entity: entity,
-            //   // ));
-            //   // showCustomDialog<void>(
-            //   //     context: context,
-            //   //     child: LongPress(
-            //   //       apps: <AppEntity>[apps[i]],
-            //   //     ));
-            // },
-            child: SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: 68,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget>[
-                  Expanded(
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          width: 60,
-                          height: 60,
-                          child: AppIconHeader(
-                            key: Key(entity.packageName),
-                            packageName: entity.packageName,
-                            channel: am.curChannel,
-                          ),
-                        ),
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Row(
-                                children: [
-                                  HighlightText(
-                                    data: entity.appName,
-                                    hightlightData: widget.filter,
-                                    defaultStyle: const TextStyle(
-                                      color: AppColors.fontColor,
-                                      fontWeight: FontWeight.bold,
+            child: GestureDetector(
+              onTap: handleOnTap,
+              behavior: HitTestBehavior.translucent,
+              onPanDown: (details) {
+                offset = details.globalPosition;
+              },
+              child: MouseRegion(
+                onHover: (event) {
+                  offset = event.position;
+                },
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: 68,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget>[
+                      Expanded(
+                        child: Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: AppIconHeader(
+                                key: Key(entity.packageName),
+                                packageName: entity.packageName,
+                                channel: am.curChannel,
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Row(
+                                    children: [
+                                      HighlightText(
+                                        data: entity.appName,
+                                        hightlightData: widget.filter,
+                                        defaultStyle: const TextStyle(
+                                          color: AppColors.fontColor,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      if (entity.freeze) tagItem('被冻结'),
+                                      if (entity.hide) tagItem('被隐藏'),
+                                    ],
+                                  ),
+                                  SingleChildScrollView(
+                                    controller: ScrollController(),
+                                    scrollDirection: Axis.horizontal,
+                                    child: HighlightText(
+                                      data: entity.packageName,
+                                      hightlightData: widget.filter,
+                                      defaultStyle: const TextStyle(
+                                        color: AppColors.fontColor,
+                                      ),
                                     ),
                                   ),
-                                  if (entity.freeze) tagItem('被冻结'),
-                                  if (entity.hide) tagItem('被隐藏'),
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    '${entity.versionName}(${entity.versionCode})',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color:
+                                          AppColors.fontColor.withOpacity(0.4),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              SingleChildScrollView(
-                                controller: ScrollController(),
-                                scrollDirection: Axis.horizontal,
-                                child: HighlightText(
-                                  data: entity.packageName,
-                                  hightlightData: widget.filter,
-                                  defaultStyle: const TextStyle(
-                                    color: AppColors.fontColor,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 4,
-                              ),
-                              Text(
-                                '${entity.versionName}(${entity.versionCode})',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.fontColor.withOpacity(0.4),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      Checkbox(
+                        value: check.contains(entity),
+                        onChanged: (bool v) {
+                          handleOnTap();
+                        },
+                      )
+                    ],
                   ),
-                  Checkbox(
-                    value: check.contains(entity),
-                    onChanged: (bool v) {
-                      handleOnTap();
-                    },
-                  )
-                ],
+                ),
               ),
             ),
           ),
