@@ -58,121 +58,124 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
   CheckController checkController = Get.find();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 4,
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: OverlayStyle.dark,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SearchBox(
+                        onInput: (data) {
+                          filter = data;
+                          setState(() {});
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 8.w,
+                    ),
+                    NiIconButton(
+                      onTap: () {},
+                      child: const Icon(Icons.more_vert),
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: SearchBox(
-                      onInput: (data) {
-                        filter = data;
-                        setState(() {});
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
-                  NiIconButton(
-                    onTap: () {},
-                    child: const Icon(Icons.more_vert),
-                  ),
-                ],
+              Expanded(
+                child: GetBuilder<AppManagerController>(builder: (ctl) {
+                  return SafeArea(
+                    child: <Widget>[
+                      AppListPage(
+                        key: const Key('user'),
+                        appList: ctl.userApps,
+                        filter: filter.toLowerCase(),
+                      ),
+                      AppListPage(
+                        key: const Key('sys'),
+                        appList: ctl.sysApps,
+                        filter: filter.toLowerCase(),
+                      ),
+                      // const MarkPage(),
+                      // const BackupListPage(),
+                    ][_currentIndex],
+                  );
+                }),
               ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: const Color(0xfff5f5f7),
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                '${Config.flutterPackage}assets/app.svg',
+                width: 24,
+              ),
+              label: '用户',
             ),
-            Expanded(
-              child: GetBuilder<AppManagerController>(builder: (ctl) {
-                return SafeArea(
-                  child: <Widget>[
-                    AppListPage(
-                      key: const Key('user'),
-                      appList: ctl.userApps,
-                      filter: filter.toLowerCase(),
-                    ),
-                    AppListPage(
-                      key: const Key('sys'),
-                      appList: ctl.sysApps,
-                      filter: filter.toLowerCase(),
-                    ),
-                    // const MarkPage(),
-                    // const BackupListPage(),
-                  ][_currentIndex],
-                );
-              }),
+            BottomNavigationBarItem(
+              icon: SvgPicture.asset(
+                '${Config.flutterPackage}assets/safe.svg',
+                width: 24,
+              ),
+              label: '系统',
             ),
+            // BottomNavigationBarItem(
+            //   icon: SvgPicture.asset(
+            //     '${Config.flutterPackage}assets/market1.svg',
+            //     width: 24,
+            //   ),
+            //   label: '收藏',
+            // ),
+            // BottomNavigationBarItem(
+            //   icon: SvgPicture.asset(
+            //     '${Config.flutterPackage}assets/backup2.svg',
+            //     width: 24,
+            //   ),
+            //   label: '备份',
+            // ),
           ],
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xfff5f5f7),
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              '${Config.flutterPackage}assets/app.svg',
-              width: 24,
-            ),
-            label: '用户',
+          unselectedItemColor: Colors.grey,
+          selectedItemColor: Colors.indigo,
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
           ),
-          BottomNavigationBarItem(
-            icon: SvgPicture.asset(
-              '${Config.flutterPackage}assets/safe.svg',
-              width: 24,
-            ),
-            label: '系统',
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
           ),
-          // BottomNavigationBarItem(
-          //   icon: SvgPicture.asset(
-          //     '${Config.flutterPackage}assets/market1.svg',
-          //     width: 24,
-          //   ),
-          //   label: '收藏',
-          // ),
-          // BottomNavigationBarItem(
-          //   icon: SvgPicture.asset(
-          //     '${Config.flutterPackage}assets/backup2.svg',
-          //     width: 24,
-          //   ),
-          //   label: '备份',
-          // ),
-        ],
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.indigo,
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
+          currentIndex: _currentIndex,
+          type: BottomNavigationBarType.fixed,
+          onTap: (int index) {
+            _currentIndex = index;
+            if (index == 1) {
+              // controller.cacheSysIcon();
+            }
+            setState(() {});
+          },
         ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-        ),
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        onTap: (int index) {
-          _currentIndex = index;
-          if (index == 1) {
-            // controller.cacheSysIcon();
-          }
-          setState(() {});
-        },
+        // floatingActionButton: GetBuilder<CheckController>(builder: (_) {
+        //   if (checkController.check.length > 1) {
+        //     return FloatingActionButton(
+        //       child: const Icon(Icons.more_vert),
+        //       onPressed: () {
+        //         Get.bottomSheet(const LongPress());
+        //       },
+        //     );
+        //   } else {
+        //     return const SizedBox();
+        //   }
+        // }),
       ),
-      // floatingActionButton: GetBuilder<CheckController>(builder: (_) {
-      //   if (checkController.check.length > 1) {
-      //     return FloatingActionButton(
-      //       child: const Icon(Icons.more_vert),
-      //       onPressed: () {
-      //         Get.bottomSheet(const LongPress());
-      //       },
-      //     );
-      //   } else {
-      //     return const SizedBox();
-      //   }
-      // }),
     );
   }
 }

@@ -101,6 +101,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     }
     controller.update();
   }
+
   @override
   Widget build(BuildContext context) {
     AppInfo entity = widget.entity;
@@ -155,8 +156,10 @@ class _AppSettingPageState extends State<AppSettingPage> {
                                 AppManagerController controller = Get.find();
                                 String activity = await controller.channel
                                     .getAppMainActivity(entity.packageName);
-                                controller.channel
-                                    .openApp(entity.packageName, activity);
+                                controller.channel.openApp(
+                                  entity.packageName,
+                                  activity,
+                                );
                                 // String className = await Global()
                                 //     .appChannel
                                 //     .getAppMainActivity(entity.packageName);
@@ -173,6 +176,9 @@ class _AppSettingPageState extends State<AppSettingPage> {
                                 //   category: 'android.intent.category.LAUNCHER',
                                 // );
                                 // intent.launch();
+                              }),
+                              buildItem('导出', onTap: () async {
+                                Get.back();
                               }),
                               buildItem('应用详情', onTap: () async {
                                 Get.back();

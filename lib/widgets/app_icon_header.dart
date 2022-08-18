@@ -42,7 +42,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
 
   @override
   Widget build(BuildContext context) {
-    Log.e('http://127.0.0.1:${widget.channel?.port ?? Global().appChannel.port}/icon/${widget.packageName}');
+    // Log.e('http://127.0.0.1:${widget.channel?.port ?? Global().appChannel.port}/icon/${widget.packageName}');
     return Padding(
       padding: widget.padding,
       child: ClipRRect(
