@@ -13,7 +13,6 @@ class AppManagerBinding extends Bindings {
     Get.put(CheckController());
     Get.put(MarkController());
     Get.put(BackupController());
-    Log.w('IconController inject');
     Get.put(IconController());
   }
 }
