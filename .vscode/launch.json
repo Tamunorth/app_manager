@@ -3,7 +3,14 @@
     // 悬停以查看现有属性的描述。
     // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": [
+    "configurations": [{
+            "name": "Web",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "deviceId": "chrome"
+        },
+
         {
             "name": "Mac Desktop",
             "request": "launch",
@@ -17,10 +24,10 @@
             "deviceId": "windows"
         },
         {
-            "name": "小米10",
+            "name": "Linux",
             "request": "launch",
             "type": "dart",
-            "deviceId": "Mi 10"
+            "deviceId": "linux"
         },
         {
             "name": "小米10s",
@@ -29,31 +36,35 @@
             "deviceId": "M2102J2SC"
         },
         {
-            "name": "平板",
+            "name": "小米12s",
             "request": "launch",
             "type": "dart",
-            "deviceId": "M2105K81AC"
+            "deviceId": "2206123SC"
         },
         {
-            "name": "红米K30",
+            "name": "小米12s-个人",
             "request": "launch",
             "type": "dart",
-            "deviceId": "Redmi K30"
+            "deviceId": "2206123SC",
+            "program": "lib/main_personal.dart",
         },
         {
-            "name": "Flutter: Attach to Process",
+            "name": "小米平板5 12.4",
+            "request": "launch",
             "type": "dart",
-            "request": "attach",
-            "deviceId": "macos",
-            "osx": {
-                "serviceInfoFile": "${env:TMPDIR}vmservice.app_template",
-            },
-            "windows": {
-                "serviceInfoFile": "${env:TEMP}/vmservice.app_template"
-            },
-            "linux": {
-                "serviceInfoFile": "${env:XDG_RUNTIME_DIR}/vmservice.app_template"
-            }
+            "deviceId": "22081281AC"
+        },
+        {
+            "name": "OPPO WATCH",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "cc004251"
+        },
+        {
+            "name": "小米13",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "2211133C"
         },
     ]
 }

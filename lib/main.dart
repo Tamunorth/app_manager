@@ -29,13 +29,13 @@ import 'routes/app_pages.dart';
 //                  佛祖保佑             永无BUG
 void main() {
   RuntimeEnvir.initEnvirWithPackageName(Config.packageName);
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(ToastApp(
     child: GetMaterialApp(
       getPages: AppPages.routes,
       initialRoute: AppManagerRoutes.home,
     ),
   ));
-  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,

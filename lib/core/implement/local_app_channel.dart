@@ -35,12 +35,9 @@ class LocalAppChannel implements AppChannel {
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
     Stopwatch watch = Stopwatch();
     watch.start();
-    final result = (await httpInstance.get<String>(
-      'http://127.0.0.1:${getPort()}/${Protocol.getAllAppInfo}',
-      queryParameters: {
-        'is_system_app': isSystemApp,
-      },
-    ))
+    final result = (await httpInstance.get<String>('http://127.0.0.1:${getPort()}/${Protocol.getAllAppInfo}', queryParameters: {
+      'is_system_app': isSystemApp,
+    }))
         .data
         .toString();
     final List<String> infos = (result).split('\n');
@@ -91,7 +88,7 @@ class LocalAppChannel implements AppChannel {
     Log.e('getAppMainActivity $result');
     return result;
   }
-  
+
   @override
   Future<List<String>> getAppActivitys(String package) async {
     String result = (await httpInstance.get<String>(
@@ -252,7 +249,6 @@ class LocalAppChannel implements AppChannel {
     return result.isNotEmpty;
   }
 
-
   // @override
   // Future<void> launchActivity(
   //   String packageName,
@@ -269,12 +265,13 @@ class LocalAppChannel implements AppChannel {
   // }
 
   @override
-  Future<void> openApp(String packageName, String activity) async {
+  Future<void> openApp(String packageName, String activity, String id) async {
     (await httpInstance.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.openAppByPackage}',
       queryParameters: {
         'package': packageName,
         'activity': activity,
+        'displayId': id,
       },
     ));
   }
@@ -313,5 +310,15 @@ class LocalAppChannel implements AppChannel {
       entitys.add(appInfo);
     }
     return entitys;
+  }
+
+  Future<List<String>> getDisplays() async {
+    String result = (await httpInstance.get<String>(
+      'http://127.0.0.1:${getPort()}/displays',
+    ))
+        .data
+        .toString();
+    Log.i(result);
+    return result.trim().split('\n');
   }
 }

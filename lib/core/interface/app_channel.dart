@@ -35,5 +35,5 @@ abstract class AppChannel {
 
   Future<String> getFileSize(String path);
 
-  Future<void> openApp(String packageName, String activity);
+  Future<void> openApp(String packageName, String activity, String id);
 }

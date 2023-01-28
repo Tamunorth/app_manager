@@ -40,9 +40,18 @@ class AppSettingPage extends StatefulWidget {
 
 class _AppSettingPageState extends State<AppSettingPage> {
   AppManagerController controller = Get.find();
+  List<String> displayId = [];
   @override
   void initState() {
     super.initState();
+    exec('dumpsys display | grep mDisplayId=').then((value) {
+      Log.i(value);
+    });
+    (controller.curChannel as LocalAppChannel).getDisplays().then((value) {
+      displayId = value;
+      Log.i(displayId);
+      setState(() {});
+    });
     getDetailsInfo();
   }
 
@@ -60,8 +69,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     details.activitys = await Global().appChannel.getAppActivitys(
           widget.entity.packageName,
         );
-    String result =
-        await Global().appChannel.getAppDetails(widget.entity.packageName);
+    String result = await Global().appChannel.getAppDetails(widget.entity.packageName);
     List<String> results = result.split('\r');
     Log.w('result -> $results');
     details.installTime = getTimeStringFromTimestamp(results[0]);
@@ -108,6 +116,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
+        // 点击透明部分可以返回
         Navigator.of(context).pop();
       },
       child: SafeArea(
@@ -116,7 +125,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
             Positioned.fill(
               top: min(
                 widget.offset.dy,
-                MediaQuery.of(context).size.height - 520,
+                MediaQuery.of(context).size.height - 580,
               ),
               left: min(
                 widget.offset.dx,
@@ -148,35 +157,36 @@ class _AppSettingPageState extends State<AppSettingPage> {
                               //     ),
                               //   ),
                               // ),
-                              buildItem('打开', onTap: () async {
-                                // if (GetPlatform.isDesktop) {
-                                //   await Global().exec(
-                                //       'am start -n ${widget.apps[0].packageName}/$activityName');
-                                // }
-                                AppManagerController controller = Get.find();
-                                String activity = await controller.channel
-                                    .getAppMainActivity(entity.packageName);
-                                controller.channel.openApp(
-                                  entity.packageName,
-                                  activity,
-                                );
-                                // String className = await Global()
-                                //     .appChannel
-                                //     .getAppMainActivity(entity.packageName);
-                                // Log.w(className);
-                                // Global().appChannel.launchActivity(
-                                //       entity.packageName,
-                                //       className,
-                                //     );
-                                // Log.w('activityName -> $activityName');
-                                // final AndroidIntent intent = AndroidIntent(
-                                //   action: 'android.intent.action.MAIN',
-                                //   package: entity.packageName,
-                                //   componentName: activityName,
-                                //   category: 'android.intent.category.LAUNCHER',
-                                // );
-                                // intent.launch();
-                              }),
+                              for (String id in displayId)
+                                buildItem('打开(显示器$id)', onTap: () async {
+                                  // if (GetPlatform.isDesktop) {
+                                  //   await Global().exec(
+                                  //       'am start -n ${widget.apps[0].packageName}/$activityName');
+                                  // }
+                                  AppManagerController controller = Get.find();
+                                  String activity = await controller.curChannel.getAppMainActivity(entity.packageName);
+                                  controller.curChannel.openApp(
+                                    entity.packageName,
+                                    activity,
+                                    id,
+                                  );
+                                  // String className = await Global()
+                                  //     .appChannel
+                                  //     .getAppMainActivity(entity.packageName);
+                                  // Log.w(className);
+                                  // Global().appChannel.launchActivity(
+                                  //       entity.packageName,
+                                  //       className,
+                                  //     );
+                                  // Log.w('activityName -> $activityName');
+                                  // final AndroidIntent intent = AndroidIntent(
+                                  //   action: 'android.intent.action.MAIN',
+                                  //   package: entity.packageName,
+                                  //   componentName: activityName,
+                                  //   category: 'android.intent.category.LAUNCHER',
+                                  // );
+                                  // intent.launch();
+                                }),
                               buildItem('导出', onTap: () async {
                                 Get.back();
                               }),
@@ -205,14 +215,10 @@ class _AppSettingPageState extends State<AppSettingPage> {
                                 // AppUtils.clearAppData(entity.packageName);
                               }),
                               buildItem('清除App数据', danger: true, onTap: () {
-                                Global()
-                                    .appChannel
-                                    .clearAppData(entity.packageName);
+                                Global().appChannel.clearAppData(entity.packageName);
                               }),
                               buildItem('卸载', danger: true, onTap: () async {
-                                await Global()
-                                    .appChannel
-                                    .unInstallApp(entity.packageName);
+                                await Global().appChannel.unInstallApp(entity.packageName);
 
                                 AppManagerController controller = Get.find();
                                 controller.removeEntity(entity);
@@ -220,68 +226,49 @@ class _AppSettingPageState extends State<AppSettingPage> {
                               }),
                               Builder(builder: (_) {
                                 if (entity.freeze) {
-                                  return buildItem('解冻', danger: false,
-                                      onTap: () async {
-                                    await Global()
-                                        .appChannel
-                                        .unFreezeApp(entity.packageName);
+                                  return buildItem('解冻', danger: false, onTap: () async {
+                                    await Global().appChannel.unFreezeApp(entity.packageName);
                                     entity.freeze = false;
                                     setState(() {});
-                                    AppManagerController controller =
-                                        Get.find();
+                                    AppManagerController controller = Get.find();
                                     controller.update();
                                   });
                                 }
-                                return buildItem('冻结', danger: true,
-                                    onTap: () async {
-                                  bool success = await Global()
-                                      .appChannel
-                                      .freezeApp(entity.packageName);
+                                return buildItem('冻结', danger: true, onTap: () async {
+                                  bool success = await Global().appChannel.freezeApp(entity.packageName);
                                   if (success) {
                                     entity.freeze = true;
                                     setState(() {});
-                                    AppManagerController controller =
-                                        Get.find();
+                                    AppManagerController controller = Get.find();
                                     controller.update();
                                   } else {
-                                    showToast(
-                                        '禁用失败,当前root状态${await Global().process.isRoot()}');
+                                    showToast('禁用失败,当前root状态${await Global().process.isRoot()}');
                                   }
                                 });
                               }),
                               Builder(builder: (_) {
                                 if (entity.hide) {
-                                  return buildItem('显示', danger: false,
-                                      onTap: () async {
-                                    bool success = await Global()
-                                        .appChannel
-                                        .showApp(entity.packageName);
+                                  return buildItem('显示', danger: false, onTap: () async {
+                                    bool success = await Global().appChannel.showApp(entity.packageName);
                                     if (success) {
                                       entity.hide = false;
                                       setState(() {});
-                                      AppManagerController controller =
-                                          Get.find();
+                                      AppManagerController controller = Get.find();
                                       controller.update();
                                     } else {
-                                      showToast(
-                                          '显示失败,当前root状态${await Global().process.isRoot()}');
+                                      showToast('显示失败,当前root状态${await Global().process.isRoot()}');
                                     }
                                   });
                                 }
-                                return buildItem('隐藏', danger: true,
-                                    onTap: () async {
-                                  bool success = await Global()
-                                      .appChannel
-                                      .hideApp(entity.packageName);
+                                return buildItem('隐藏', danger: true, onTap: () async {
+                                  bool success = await Global().appChannel.hideApp(entity.packageName);
                                   if (success) {
                                     entity.hide = true;
                                     setState(() {});
-                                    AppManagerController controller =
-                                        Get.find();
+                                    AppManagerController controller = Get.find();
                                     controller.update();
                                   } else {
-                                    showToast(
-                                        '隐藏失败,当前root状态${await Global().process.isRoot()}');
+                                    showToast('隐藏失败,当前root状态${await Global().process.isRoot()}');
                                   }
                                 });
                               }),
@@ -319,17 +306,20 @@ class _AppSettingPageState extends State<AppSettingPage> {
     return InkWell(
       onTap: onTap,
       child: SizedBox(
-        height: 54,
+        height: 40.w,
         child: Align(
           alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text(
-              title,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: danger ? Colors.red : AppColors.fontColor,
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 12.w),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.w,
+                  color: danger ? Colors.red : AppColors.fontColor,
+                ),
               ),
             ),
           ),
@@ -465,26 +455,22 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                                 height: 48.w,
                                                 child: AppIconHeader(
                                                   padding: EdgeInsets.zero,
-                                                  packageName:
-                                                      widget.entity.packageName,
+                                                  packageName: widget.entity.packageName,
                                                 ),
                                               ),
                                               SizedBox(
                                                 width: 4,
                                               ),
                                               Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
                                                       Text(
                                                         entity.appName,
                                                         style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: AppColors
-                                                              .fontColor,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: AppColors.fontColor,
                                                         ),
                                                       ),
                                                     ],
@@ -495,10 +481,8 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                                       const Text(
                                                         'Version Name : ',
                                                         style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: AppColors
-                                                              .fontColor,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: AppColors.fontColor,
                                                         ),
                                                       ),
                                                       Text(entity.versionName),
@@ -510,10 +494,8 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                                       const Text(
                                                         'Version Code : ',
                                                         style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: AppColors
-                                                              .fontColor,
+                                                          fontWeight: FontWeight.bold,
+                                                          color: AppColors.fontColor,
                                                         ),
                                                       ),
                                                       Text(entity.versionCode),
@@ -545,10 +527,8 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                   padding: const EdgeInsets.all(12.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.max,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
                                       Row(
                                         children: [
