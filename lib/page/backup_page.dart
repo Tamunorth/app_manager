@@ -15,14 +15,14 @@ import 'package:path/path.dart' as path;
 
 class BackupPage extends StatefulWidget {
   const BackupPage({
-    Key key,
+    Key? key,
     this.backupApk = true,
     this.backupData = false,
     this.entitys,
   }) : super(key: key);
   final bool backupApk;
   final bool backupData;
-  final List<AppInfo> entitys;
+  final List<AppInfo?>? entitys;
 
   @override
   _BackupPageState createState() => _BackupPageState();
@@ -30,11 +30,11 @@ class BackupPage extends StatefulWidget {
 
 class _BackupPageState extends State<BackupPage> {
   String dataPath = '/sdcard/YanTool/AppManager';
-  int limit = 1;
+  int? limit = 1;
   int current = 0;
   int index = 0;
-  AppInfo currentApp;
-  String backupPath;
+  AppInfo? currentApp;
+  late String backupPath;
   bool startBackupData = false;
   bool allBackup = false;
 
@@ -46,19 +46,19 @@ class _BackupPageState extends State<BackupPage> {
 
   Future<void> execBackup() async {
     await Future.delayed(const Duration(milliseconds: 100));
-    for (AppInfo entity in widget.entitys) {
+    for (AppInfo? entity in widget.entitys!) {
       index++;
       currentApp = entity;
       setState(() {});
       // computeSpeed();
-      backupPath = '$dataPath/${currentApp.appName}.apk';
+      backupPath = '$dataPath/${currentApp!.appName}.apk';
       await Global().exec(
-        'mkdir -p $dataPath && cp ${currentApp.apkPath} $backupPath',
+        'mkdir -p $dataPath && cp ${currentApp!.apkPath} $backupPath',
       );
       startBackupData = true;
       setState(() {});
       await Global().exec(
-        'tar -zcvf $dataPath/${currentApp.appName}.tar.gz /data/data/${currentApp.packageName}',
+        'tar -zcvf $dataPath/${currentApp!.appName}.tar.gz /data/data/${currentApp!.packageName}',
       );
       // 最后一个需要通知结束
     }
@@ -69,7 +69,7 @@ class _BackupPageState extends State<BackupPage> {
   Future<void> computeSpeed() async {
     // 这儿的apk可能还没有
     limit = int.tryParse(await Global()
-                            .appChannel.getFileSize(currentApp.apkPath));
+                            .appChannel!.getFileSize(currentApp!.apkPath));
     current = 0;
     setState(() {});
     while (limit != current) {
@@ -119,7 +119,7 @@ class _BackupPageState extends State<BackupPage> {
                                 Row(
                                   children: [
                                     Text(
-                                      '${currentApp.appName}',
+                                      '${currentApp!.appName}',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -127,7 +127,7 @@ class _BackupPageState extends State<BackupPage> {
                                       ),
                                     ),
                                     Text(
-                                      ' (${index}/${widget.entitys.length})',
+                                      ' (${index}/${widget.entitys!.length})',
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -162,7 +162,7 @@ class _BackupPageState extends State<BackupPage> {
                               width: 72,
                               height: 72,
                               child: AppIconHeader(
-                                packageName: '${currentApp.packageName}',
+                                packageName: '${currentApp!.packageName}',
                               ),
                             ),
                           ],
@@ -176,7 +176,7 @@ class _BackupPageState extends State<BackupPage> {
                             if (allBackup) {
                               return SizedBox();
                             }
-                            double value = current / limit;
+                            double value = current / limit!;
                             return LinearProgressIndicator(
                               backgroundColor:
                                   AppColors.accentColor.withOpacity(0.15),

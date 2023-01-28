@@ -6,7 +6,7 @@ import 'package:global_repository/global_repository.dart';
 import 'local_app_channel.dart';
 
 class RemoteAppChannel extends LocalAppChannel {
-  String serial;
+  String? serial;
   @override
   Future<void> openApp(String packageName, String activity, String id) async {
     Log.e('openApp $packageName');

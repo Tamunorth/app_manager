@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
 class MarkPage extends StatefulWidget {
-  const MarkPage({Key key}) : super(key: key);
+  const MarkPage({Key? key}) : super(key: key);
 
   @override
   _MarkPageState createState() => _MarkPageState();
@@ -22,11 +22,11 @@ class _MarkPageState extends State<MarkPage> {
       builder: (context) {
         return ListView.builder(
           controller: _scrollController,
-          itemCount: context.marks.mark.length,
+          itemCount: context.marks.mark!.length,
           padding: const EdgeInsets.only(bottom: 60),
           physics: const BouncingScrollPhysics(),
           itemBuilder: (BuildContext c, int i) {
-            Mark mark = context.marks.mark.elementAt(i);
+            Mark mark = context.marks.mark!.elementAt(i);
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -42,7 +42,7 @@ class _MarkPageState extends State<MarkPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            mark.name,
+                            mark.name!,
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: AppColors.fontColor,
@@ -53,7 +53,7 @@ class _MarkPageState extends State<MarkPage> {
                             height: 2.w,
                           ),
                           Text(
-                            mark.package + '/' + mark.component,
+                            mark.package! + '/' + mark.component!,
                             style: TextStyle(
                               // fontWeight: FontWeight.bold,
                               color: AppColors.fontColor.withOpacity(0.6),

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LongPress extends StatefulWidget {
-  const LongPress({Key key}) : super(key: key);
+  const LongPress({Key? key}) : super(key: key);
 
   @override
   _LongPressState createState() => _LongPressState();
@@ -71,9 +71,9 @@ class _LongPressState extends State<LongPress> {
             item('冻结', () async {
               Get.back();
               AppManagerController managerController = Get.find();
-              for (AppInfo entity in controller.check) {
+              for (AppInfo? entity in controller.check) {
                 bool success =
-                    await Global().appChannel.freezeApp(entity.packageName);
+                    await Global().appChannel!.freezeApp(entity!.packageName);
                 if (success) {
                   entity.freeze = true;
                   managerController.update();
@@ -85,9 +85,9 @@ class _LongPressState extends State<LongPress> {
             item('解冻', () async {
               Get.back();
               AppManagerController managerController = Get.find();
-              for (AppInfo entity in controller.check) {
+              for (AppInfo? entity in controller.check) {
                 bool success =
-                    await Global().appChannel.unFreezeApp(entity.packageName);
+                    await Global().appChannel!.unFreezeApp(entity!.packageName);
                 if (success) {
                   entity.freeze = false;
                   managerController.update();

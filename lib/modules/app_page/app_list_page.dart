@@ -16,7 +16,7 @@ import '../../widgets/highlight_text.dart';
 
 class AppListPage extends StatefulWidget {
   const AppListPage({
-    Key key,
+    Key? key,
     this.appList = const [],
     this.filter = '',
   }) : super(key: key);
@@ -73,12 +73,12 @@ class AppListPageState extends State<AppListPage> {
 
 class AppItem extends StatefulWidget {
   const AppItem({
-    Key key,
+    Key? key,
     this.entity,
     this.filter,
   }) : super(key: key);
-  final AppInfo entity;
-  final String filter;
+  final AppInfo? entity;
+  final String? filter;
 
   @override
   _AppItemState createState() => _AppItemState();
@@ -89,7 +89,7 @@ class _AppItemState extends State<AppItem> {
   AppManagerController am = Get.find();
 
   handleOnTap() {
-    AppInfo entity = widget.entity;
+    AppInfo? entity = widget.entity;
     final check = checkController.check;
     if (check.contains(entity)) {
       checkController.removeCheck(entity);
@@ -130,7 +130,7 @@ class _AppItemState extends State<AppItem> {
   Offset offset = const Offset(0.0, 0.0);
   @override
   Widget build(BuildContext context) {
-    AppInfo entity = widget.entity;
+    AppInfo entity = widget.entity!;
     final check = checkController.check;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -233,7 +233,7 @@ class _AppItemState extends State<AppItem> {
                       ),
                       Checkbox(
                         value: check.contains(entity),
-                        onChanged: (bool v) {
+                        onChanged: (bool? v) {
                           handleOnTap();
                         },
                       )

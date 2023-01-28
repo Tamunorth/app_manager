@@ -16,7 +16,7 @@ Future<void> cacheAllUserIcons(
 ) async {
   // 所有图
   // Directory appDocDir = await getApplicationSupportDirectory();
-  String appDocPath = RuntimeEnvir.filesPath;
+  String? appDocPath = RuntimeEnvir.filesPath;
   // Log.w('getTemporaryDirectory -> ${await getTemporaryDirectory()}');
   // Log.w('getLibraryDirectory -> ${await getLibraryDirectory()}');
   // Log.w('getApplicationDocumentsDirectory -> ${await getApplicationDocumentsDirectory()}');
@@ -66,7 +66,7 @@ List<String> parsePMOut(String out) {
 class AppUtils {
   static Future<List<AppInfo>> getAllAppInfo({
     AppType appType = AppType.user,
-    AppChannel appChannel,
+    required AppChannel appChannel,
   }) async {
     bool isSystemApp = false;
     if (appType == AppType.system) {

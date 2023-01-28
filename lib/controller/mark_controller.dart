@@ -13,7 +13,7 @@ class MarkController extends GetxController {
     // Log.w('MarkController');
     initBox();
   }
-  Box box;
+  late Box box;
   Future<void> initBox() async {
     box = await Hive.openBox('myBox', path: RuntimeEnvir.filesPath);
     getLocalData();
@@ -21,7 +21,7 @@ class MarkController extends GetxController {
 
   Marks marks = Marks(mark: []);
   Future<void> addMarket(Mark mark) async {
-    marks.mark.add(mark);
+    marks.mark!.add(mark);
     update();
     saveToLocal();
   }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppMenu extends StatefulWidget {
-  const AppMenu({Key key}) : super(key: key);
+  const AppMenu({Key? key}) : super(key: key);
 
   @override
   State<AppMenu> createState() => _AppMenuState();

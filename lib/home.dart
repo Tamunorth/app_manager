@@ -17,7 +17,7 @@ import 'routes/app_pages.dart';
 import 'widgets/search_box.dart';
 
 class AppManagerWithoutMaterialpp extends StatelessWidget {
-  const AppManagerWithoutMaterialpp({Key key}) : super(key: key);
+  const AppManagerWithoutMaterialpp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,9 +26,9 @@ class AppManagerWithoutMaterialpp extends StatelessWidget {
 }
 
 class AppManagerEntryPoint extends StatefulWidget {
-  AppManagerEntryPoint({Key key, this.process}) : super(key: key) {
+  AppManagerEntryPoint({Key? key, this.process}) : super(key: key) {
     if (process != null) {
-      Global().process = process;
+      Global().process = process as YanProcess?;
     } else {
       // 放这儿是对的
     }
@@ -37,7 +37,7 @@ class AppManagerEntryPoint extends StatefulWidget {
       Global().process = Get.arguments;
     }
   }
-  final Executable process;
+  final Executable? process;
   @override
   _AppManagerEntryPointState createState() => _AppManagerEntryPointState();
 }

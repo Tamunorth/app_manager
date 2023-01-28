@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-T asT<T>(dynamic value) {
+T? asT<T>(dynamic value) {
   if (value is T) {
     return value;
   }
@@ -14,7 +14,7 @@ class Mark {
     this.component,
   });
 
-  factory Mark.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
+  factory Mark.fromJson(Map<String, dynamic>? jsonRes) => jsonRes == null
       ? null
       : Mark(
           name: asT<String>(jsonRes['name']),
@@ -22,9 +22,9 @@ class Mark {
           component: asT<String>(jsonRes['component']),
         );
 
-  String name;
-  String package;
-  String component;
+  String? name;
+  String? package;
+  String? component;
 
   @override
   String toString() {

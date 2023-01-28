@@ -27,8 +27,8 @@ import 'backup_sheet.dart';
 
 class AppSettingPage extends StatefulWidget {
   const AppSettingPage({
-    Key key,
-    @required this.entity,
+    Key? key,
+    required this.entity,
     this.offset = const Offset(0, 0),
   }) : super(key: key);
   final AppInfo entity;
@@ -56,7 +56,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
   }
 
   String getTimeStringFromTimestamp(String timestamp) {
-    return '${DateTime.fromMillisecondsSinceEpoch(int.tryParse(timestamp))}';
+    return '${DateTime.fromMillisecondsSinceEpoch(int.tryParse(timestamp)!)}';
     // https://www.coloros.com/rom/firmware?id=126
   }
 
@@ -66,10 +66,10 @@ class _AppSettingPageState extends State<AppSettingPage> {
 
   Future<void> getDetailsInfo() async {
     AppDetails details = AppDetails();
-    details.activitys = await Global().appChannel.getAppActivitys(
+    details.activitys = await Global().appChannel!.getAppActivitys(
           widget.entity.packageName,
         );
-    String result = await Global().appChannel.getAppDetails(widget.entity.packageName);
+    String result = await Global().appChannel!.getAppDetails(widget.entity.packageName);
     List<String> results = result.split('\r');
     Log.w('result -> $results');
     details.installTime = getTimeStringFromTimestamp(results[0]);
@@ -80,7 +80,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     if (ls.isNotEmpty) {
       for (String path in ls.split('\n')) {
         details.soLibs.add(
-          SoEntity(path, await getFileSize(details.libDir + '/' + path)),
+          SoEntity(path, await getFileSize(details.libDir! + '/' + path)),
         );
       }
     }
@@ -97,7 +97,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
     details.apkSha1 = sha1;
     details.apkSha256 = sha256;
     widget.entity.details = details;
-    List<String> pers = await Global().appChannel.getAppPermission(
+    List<String> pers = await Global().appChannel!.getAppPermission(
           widget.entity.packageName,
         );
     Log.w('pers -> $pers');
@@ -164,8 +164,8 @@ class _AppSettingPageState extends State<AppSettingPage> {
                                   //       'am start -n ${widget.apps[0].packageName}/$activityName');
                                   // }
                                   AppManagerController controller = Get.find();
-                                  String activity = await controller.curChannel.getAppMainActivity(entity.packageName);
-                                  controller.curChannel.openApp(
+                                  String activity = await controller.curChannel!.getAppMainActivity(entity.packageName);
+                                  controller.curChannel!.openApp(
                                     entity.packageName,
                                     activity,
                                     id,
@@ -215,10 +215,10 @@ class _AppSettingPageState extends State<AppSettingPage> {
                                 // AppUtils.clearAppData(entity.packageName);
                               }),
                               buildItem('清除App数据', danger: true, onTap: () {
-                                Global().appChannel.clearAppData(entity.packageName);
+                                Global().appChannel!.clearAppData(entity.packageName);
                               }),
                               buildItem('卸载', danger: true, onTap: () async {
-                                await Global().appChannel.unInstallApp(entity.packageName);
+                                await Global().appChannel!.unInstallApp(entity.packageName);
 
                                 AppManagerController controller = Get.find();
                                 controller.removeEntity(entity);
@@ -227,7 +227,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
                               Builder(builder: (_) {
                                 if (entity.freeze) {
                                   return buildItem('解冻', danger: false, onTap: () async {
-                                    await Global().appChannel.unFreezeApp(entity.packageName);
+                                    await Global().appChannel!.unFreezeApp(entity.packageName);
                                     entity.freeze = false;
                                     setState(() {});
                                     AppManagerController controller = Get.find();
@@ -235,40 +235,40 @@ class _AppSettingPageState extends State<AppSettingPage> {
                                   });
                                 }
                                 return buildItem('冻结', danger: true, onTap: () async {
-                                  bool success = await Global().appChannel.freezeApp(entity.packageName);
+                                  bool success = await Global().appChannel!.freezeApp(entity.packageName);
                                   if (success) {
                                     entity.freeze = true;
                                     setState(() {});
                                     AppManagerController controller = Get.find();
                                     controller.update();
                                   } else {
-                                    showToast('禁用失败,当前root状态${await Global().process.isRoot()}');
+                                    showToast('禁用失败,当前root状态${await Global().process!.isRoot()}');
                                   }
                                 });
                               }),
                               Builder(builder: (_) {
                                 if (entity.hide) {
                                   return buildItem('显示', danger: false, onTap: () async {
-                                    bool success = await Global().appChannel.showApp(entity.packageName);
+                                    bool success = await Global().appChannel!.showApp(entity.packageName);
                                     if (success) {
                                       entity.hide = false;
                                       setState(() {});
                                       AppManagerController controller = Get.find();
                                       controller.update();
                                     } else {
-                                      showToast('显示失败,当前root状态${await Global().process.isRoot()}');
+                                      showToast('显示失败,当前root状态${await Global().process!.isRoot()}');
                                     }
                                   });
                                 }
                                 return buildItem('隐藏', danger: true, onTap: () async {
-                                  bool success = await Global().appChannel.hideApp(entity.packageName);
+                                  bool success = await Global().appChannel!.hideApp(entity.packageName);
                                   if (success) {
                                     entity.hide = true;
                                     setState(() {});
                                     AppManagerController controller = Get.find();
                                     controller.update();
                                   } else {
-                                    showToast('隐藏失败,当前root状态${await Global().process.isRoot()}');
+                                    showToast('隐藏失败,当前root状态${await Global().process!.isRoot()}');
                                   }
                                 });
                               }),
@@ -300,7 +300,7 @@ class _AppSettingPageState extends State<AppSettingPage> {
 
   InkWell buildItem(
     String title, {
-    void Function() onTap,
+    void Function()? onTap,
     bool danger = false,
   }) {
     return InkWell(
@@ -334,7 +334,7 @@ class AppInfoDetailPage extends StatefulWidget {
     key,
     this.entity,
   }) : super(key: key);
-  final AppInfo entity;
+  final AppInfo? entity;
 
   @override
   _AppInfoDetailPageState createState() => _AppInfoDetailPageState();
@@ -357,7 +357,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AppManagerController>(builder: (_) {
-      if (widget.entity.details == null) {
+      if (widget.entity!.details == null) {
         return SpinKitThreeBounce(
           color: Colors.indigo,
           size: 24,
@@ -420,7 +420,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 0),
             child: Builder(builder: (context) {
-              AppInfo entity = widget.entity;
+              AppInfo entity = widget.entity!;
               return SingleChildScrollView(
                 padding: EdgeInsets.zero,
                 physics: BouncingScrollPhysics(),
@@ -455,7 +455,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                                 height: 48.w,
                                                 child: AppIconHeader(
                                                   padding: EdgeInsets.zero,
-                                                  packageName: widget.entity.packageName,
+                                                  packageName: widget.entity!.packageName,
                                                 ),
                                               ),
                                               SizedBox(
@@ -485,7 +485,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                                           color: AppColors.fontColor,
                                                         ),
                                                       ),
-                                                      Text(entity.versionName),
+                                                      Text(entity.versionName!),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 2),
@@ -498,7 +498,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                                           color: AppColors.fontColor,
                                                         ),
                                                       ),
-                                                      Text(entity.versionCode),
+                                                      Text(entity.versionCode!),
                                                     ],
                                                   ),
                                                 ],
@@ -539,14 +539,14 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                               color: AppColors.fontColor,
                                             ),
                                           ),
-                                          Text(entity.uid),
+                                          Text(entity.uid!),
                                         ],
                                       ),
                                       const SizedBox(height: 2),
                                       InkWell(
                                         onTap: () async {
                                           await Clipboard.setData(ClipboardData(
-                                            text: widget.entity.minSdk,
+                                            text: widget.entity!.minSdk,
                                           ));
                                           showToast('minSdk已复制');
                                         },
@@ -560,7 +560,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                               ),
                                             ),
                                             Text(
-                                              widget.entity.minSdk,
+                                              widget.entity!.minSdk!,
                                               style: TextStyle(
                                                 color: AppColors.fontColor,
                                               ),
@@ -574,7 +574,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                       InkWell(
                                         onTap: () async {
                                           await Clipboard.setData(ClipboardData(
-                                            text: widget.entity.targetSdk,
+                                            text: widget.entity!.targetSdk,
                                           ));
                                           showToast('targetSdk已复制');
                                         },
@@ -588,7 +588,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                                               ),
                                             ),
                                             Text(
-                                              widget.entity.targetSdk,
+                                              widget.entity!.targetSdk!,
                                               style: TextStyle(
                                                 color: AppColors.fontColor,
                                               ),
@@ -616,11 +616,11 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                               buildItem('应用包名', entity.packageName),
                               buildItem(
                                 '应用安装时间',
-                                entity.details.installTime,
+                                entity.details!.installTime!,
                               ),
                               buildItem(
                                 '应用更新时间',
-                                entity.details.updateTime,
+                                entity.details!.updateTime!,
                               ),
                             ],
                           ),
@@ -638,12 +638,12 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                               buildItem(
                                 'Apk大小',
                                 FileSizeUtils.getFileSizeFromStr(
-                                  entity.details.apkSize,
-                                ),
+                                  entity.details!.apkSize!,
+                                )!,
                               ),
-                              buildItem('Apk MD5', entity.details.apkMd5),
-                              buildItem('Apk SHA1', entity.details.apkSha1),
-                              buildItem('Apk SHA256', entity.details.apkSha256),
+                              buildItem('Apk MD5', entity.details!.apkMd5!),
+                              buildItem('Apk SHA1', entity.details!.apkSha1!),
+                              buildItem('Apk SHA256', entity.details!.apkSha256!),
                             ],
                           ),
                         ),
@@ -658,8 +658,8 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                           child: Column(
                             children: [
                               buildItem('Apk路径', entity.apkPath),
-                              buildItem('so库路径', entity.details.libDir),
-                              buildItem('私有路径', entity.details.dataDir),
+                              buildItem('so库路径', entity.details!.libDir!),
+                              buildItem('私有路径', entity.details!.dataDir!),
                             ],
                           ),
                         ),
@@ -672,7 +672,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
           ),
           Builder(builder: (_) {
             List<Widget> children = [];
-            for (String activity in widget.entity.details.activitys) {
+            for (String activity in widget.entity!.details!.activitys!) {
               children.add(Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -680,7 +680,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
                     MarkController controller = Get.find();
                     controller.addMarket(Mark(
                       name: '小爱快捷',
-                      package: widget.entity.packageName,
+                      package: widget.entity!.packageName,
                       component: activity,
                     ));
                     showToast('已添加到收藏');
@@ -725,7 +725,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
           }),
           Builder(builder: (_) {
             List<Widget> children = [];
-            for (SoEntity entity in widget.entity.details.soLibs) {
+            for (SoEntity entity in widget.entity!.details!.soLibs) {
               children.add(Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -769,7 +769,7 @@ class _AppInfoDetailPageState extends State<AppInfoDetailPage> {
           }),
           Builder(builder: (_) {
             List<Widget> children = [];
-            for (PermissionEntity entity in widget.entity.details.permission) {
+            for (PermissionEntity entity in widget.entity!.details!.permission) {
               children.add(Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -878,28 +878,28 @@ final List<Color> colors = [
 
 class DetailsTab extends StatefulWidget {
   const DetailsTab({
-    Key key,
+    Key? key,
     this.value,
     this.onChange,
     this.controller,
   }) : super(key: key);
-  final int value;
-  final void Function(int value) onChange;
-  final PageController controller;
+  final int? value;
+  final void Function(int value)? onChange;
+  final PageController? controller;
 
   @override
   _DetailsTabState createState() => _DetailsTabState();
 }
 
 class _DetailsTabState extends State<DetailsTab> {
-  int _value;
+  int? _value;
   @override
   void initState() {
     super.initState();
     _value = widget.value;
-    widget.controller.addListener(() {
-      if (widget.controller.page.round() != _value) {
-        _value = widget.controller.page.round();
+    widget.controller!.addListener(() {
+      if (widget.controller!.page!.round() != _value) {
+        _value = widget.controller!.page!.round();
         setState(() {});
       }
     });
@@ -919,7 +919,7 @@ class _DetailsTabState extends State<DetailsTab> {
       children.add(
         GestureDetector(
           onTap: () {
-            widget.onChange(i);
+            widget.onChange!(i);
           },
           child: Container(
             decoration: BoxDecoration(

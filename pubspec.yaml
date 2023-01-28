@@ -4,7 +4,7 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.9.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -12,7 +12,7 @@ dependencies:
   # path_provider: ^2.0.7
   android_intent_plus: ^1.0.2
   # Flutter 的一些动画
-  flutter_spinkit: "^4.1.2"
+  flutter_spinkit: ^5.1.0
 
   dio: ^4.0.0
   shortcut: ^0.0.1
@@ -46,5 +46,6 @@ dependency_overrides:
 #     path: /Users/nightmare/Desktop/nightmare-space/global_repository
   applib_util:
     path: ../applib/applib_util
+  flutter_svg: ^1.1.6
 #   adbutil:
 #     path: /Users/nightmare/Desktop/nightmare-space/adbutil

@@ -37,9 +37,9 @@ class AppManagerController extends GetxController {
   List<AppInfo> get sysApps => _sysApps;
 
   // 关键变量
-  AppChannel channel;
+  AppChannel? channel;
 
-  AppChannel get curChannel => channel ?? Global().appChannel;
+  AppChannel? get curChannel => channel ?? Global().appChannel;
 
   void setAppChannel(AppChannel channel) {
     this.channel = channel;
@@ -47,7 +47,7 @@ class AppManagerController extends GetxController {
 
   Future<void> getUserApp() async {
     _userApps = await AppUtils.getAllAppInfo(
-      appChannel: curChannel,
+      appChannel: curChannel!,
     );
     update();
   }
@@ -72,7 +72,7 @@ class AppManagerController extends GetxController {
   Future<void> getSysApp() async {
     _sysApps = await AppUtils.getAllAppInfo(
       appType: AppType.system,
-      appChannel: curChannel,
+      appChannel: curChannel!,
     );
     update();
   }

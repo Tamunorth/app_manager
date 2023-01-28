@@ -16,15 +16,15 @@ import 'package:global_repository/global_repository.dart';
 
 class LocalAppChannel implements AppChannel {
   @override
-  int port;
+  int? port;
 
-  int getPort() {
+  int? getPort() {
     if (port != null) {
       // Log.e('port -> $port');
       return port;
     }
     String data = File(
-      RuntimeEnvir.filesPath + '/server_port',
+      RuntimeEnvir.filesPath! + '/server_port',
     ).readAsStringSync();
     port = int.tryParse(data);
     Log.w('成功获取 LocalAppChannel port -> $port');
@@ -35,7 +35,7 @@ class LocalAppChannel implements AppChannel {
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp) async {
     Stopwatch watch = Stopwatch();
     watch.start();
-    final result = (await httpInstance.get<String>('http://127.0.0.1:${getPort()}/${Protocol.getAllAppInfo}', queryParameters: {
+    final result = (await httpInstance!.get<String>('http://127.0.0.1:${getPort()}/${Protocol.getAllAppInfo}', queryParameters: {
       'is_system_app': isSystemApp,
     }))
         .data
@@ -64,7 +64,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<String> getAppDetails(String package) async {
-    String result = (await httpInstance.get<String>(
+    String result = (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.getAppDetail}',
       queryParameters: {
         'package': package,
@@ -77,7 +77,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<String> getAppMainActivity(String packageName) async {
-    String result = (await httpInstance.get<String>(
+    String result = (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.getAppMainActivity}',
       queryParameters: {
         'package': packageName,
@@ -91,7 +91,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<String>> getAppActivitys(String package) async {
-    String result = (await httpInstance.get<String>(
+    String result = (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.getAppActivity}',
       queryParameters: {
         'package': package,
@@ -106,7 +106,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<String>> getAppPermission(String package) async {
-    String result = (await httpInstance.get<String>(
+    String result = (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.getAppPermissions}',
       queryParameters: {
         'package': package,
@@ -266,7 +266,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<void> openApp(String packageName, String activity, String id) async {
-    (await httpInstance.get<String>(
+    (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.openAppByPackage}',
       queryParameters: {
         'package': packageName,
@@ -283,7 +283,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<AppInfo>> getAppInfos(List<String> packages) async {
-    String result = (await httpInstance.get<String>(
+    String result = (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/${Protocol.getAppInfos}',
       queryParameters: {
         'apps': packages,
@@ -313,7 +313,7 @@ class LocalAppChannel implements AppChannel {
   }
 
   Future<List<String>> getDisplays() async {
-    String result = (await httpInstance.get<String>(
+    String result = (await httpInstance!.get<String>(
       'http://127.0.0.1:${getPort()}/displays',
     ))
         .data

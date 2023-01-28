@@ -11,7 +11,7 @@ import 'config.dart';
 class Global {
   // 工厂模式
 
-  factory Global() => _getInstance();
+  factory Global() => _getInstance()!;
   Global._internal() {
     appChannel = LocalAppChannel();
     if (RuntimeEnvir.packageName != Config.packageName) {
@@ -23,20 +23,20 @@ class Global {
     } else {}
   }
 
-  static Global get instance => _getInstance();
+  static Global? get instance => _getInstance();
 
-  static Global _instance;
+  static Global? _instance;
 
-  static Global _getInstance() {
+  static Global? _getInstance() {
     _instance ??= Global._internal();
     return _instance;
   }
 
-  AppChannel appChannel;
+  AppChannel? appChannel;
   Map<String, List<int>> iconCacheMap = {};
-  YanProcess process = YanProcess();
+  YanProcess? process = YanProcess();
 
   Future<String> exec(String script) {
-    return process.exec(script);
+    return process!.exec(script);
   }
 }

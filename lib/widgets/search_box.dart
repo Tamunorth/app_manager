@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SearchBox extends StatelessWidget {
-  const SearchBox({Key key, this.onInput}) : super(key: key);
-  final void Function(String data) onInput;
+  const SearchBox({Key? key, this.onInput}) : super(key: key);
+  final void Function(String data)? onInput;
 
   @override
   Widget build(BuildContext context) {

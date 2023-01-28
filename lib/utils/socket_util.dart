@@ -14,11 +14,11 @@ class SocketWrapper {
   SocketWrapper(this.address, this.port);
   final dynamic address;
   final int port;
-  Socket socket;
-  Stream<List<int>> mStream;
+  late Socket socket;
+  late Stream<List<int>> mStream;
   // Stream<List<int>> uintStream;
   Int8List cacheData = Int8List(0);
-  static ServerSocket serverSocket;
+  static ServerSocket? serverSocket;
 
   Future<bool> connect() async {
     try {
@@ -37,7 +37,7 @@ class SocketWrapper {
     }
   }
 
-  Future<SocketWrapper> bind() async {
+  Future<SocketWrapper?> bind() async {
     try {
       ServerSocket serverSocket = await ServerSocket.bind(
         address,

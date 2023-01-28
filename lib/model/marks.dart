@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'mark.dart';
 
-T asT<T>(dynamic value) {
+T? asT<T>(dynamic value) {
   if (value is T) {
     return value;
   }
@@ -14,12 +14,12 @@ class Marks {
     this.mark,
   });
 
-  factory Marks.fromJson(Map<String, dynamic> jsonRes) {
+  factory Marks.fromJson(Map<String, dynamic>? jsonRes) {
     if (jsonRes == null) {
       return null;
     }
 
-    final List<Mark> mark = jsonRes['mark'] is List ? <Mark>[] : null;
+    final List<Mark>? mark = jsonRes['mark'] is List ? <Mark>[] : null;
     if (mark != null) {
       for (final dynamic item in jsonRes['mark']) {
         if (item != null) {
@@ -32,7 +32,7 @@ class Marks {
     );
   }
 
-  List<Mark> mark;
+  List<Mark>? mark;
 
   @override
   String toString() {

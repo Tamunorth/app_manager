@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
 class BackupListPage extends StatefulWidget {
-  const BackupListPage({Key key}) : super(key: key);
+  const BackupListPage({Key? key}) : super(key: key);
 
   @override
   _BackupListPageState createState() => _BackupListPageState();

@@ -17,14 +17,14 @@ class AppInfo {
   String iconPath = '';
   String appName;
   final String apkPath;
-  String targetSdk = '';
-  String minSdk = '';
-  String versionName = '';
-  String versionCode = '';
+  String? targetSdk = '';
+  String? minSdk = '';
+  String? versionName = '';
+  String? versionCode = '';
   bool freeze;
   bool hide;
-  final String uid;
-  AppDetails details;
+  final String? uid;
+  AppDetails? details;
 
   AppInfo copyWith(AppInfo other) {
     AppInfo appEntity = AppInfo(

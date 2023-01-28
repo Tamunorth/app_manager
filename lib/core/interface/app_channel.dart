@@ -3,7 +3,7 @@
 import 'package:app_manager/model/app.dart';
 
 abstract class AppChannel {
-  int port;
+  int? port;
 
   Future<List<AppInfo>> getAllAppInfo(bool isSystemApp);
 

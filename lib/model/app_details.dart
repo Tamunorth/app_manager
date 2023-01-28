@@ -10,15 +10,15 @@ class AppDetails {
     this.libDir,
     this.activitys,
   });
-  String installTime;
-  String updateTime;
-  String apkSize;
-  String apkMd5;
-  String apkSha1;
-  String apkSha256;
-  String dataDir;
-  String libDir;
-  List<String> activitys = [];
+  String? installTime;
+  String? updateTime;
+  String? apkSize;
+  String? apkMd5;
+  String? apkSha1;
+  String? apkSha256;
+  String? dataDir;
+  String? libDir;
+  List<String>? activitys = [];
   List<SoEntity> soLibs = [];
   List<PermissionEntity> permission = [];
 }

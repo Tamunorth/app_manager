@@ -12,14 +12,14 @@ import 'package:global_repository/global_repository.dart';
 
 class AppIconHeader extends StatefulWidget {
   const AppIconHeader({
-    Key key,
+    Key? key,
     this.packageName,
     this.padding = const EdgeInsets.all(8.0),
-    @required this.channel,
+    required this.channel,
   }) : super(key: key);
-  final String packageName;
+  final String? packageName;
   final EdgeInsets padding;
-  final AppChannel channel;
+  final AppChannel? channel;
 
   @override
   _AppIconHeaderState createState() => _AppIconHeaderState();
@@ -29,7 +29,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
   bool useByte = false;
   bool prepare = false;
   IconController iconController = Get.find();
-  String iconDirPath;
+  String? iconDirPath;
   @override
   void initState() {
     super.initState();
@@ -48,7 +48,7 @@ class _AppIconHeaderState extends State<AppIconHeader> {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.w),
         child: Image.network(
-          'http://127.0.0.1:${widget.channel?.port ?? Global().appChannel.port}/icon/${widget.packageName}',
+          'http://127.0.0.1:${widget.channel?.port ?? Global().appChannel!.port}/icon/${widget.packageName}',
           gaplessPlayback: true,
           errorBuilder: (_, __, ___) {
             return Image.asset(

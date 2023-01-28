@@ -11,8 +11,8 @@ import 'package:global_repository/global_repository.dart';
 import 'backup_page.dart';
 
 class BackupSheet extends StatefulWidget {
-  const BackupSheet({Key key, this.entitys = const []}) : super(key: key);
-  final List<AppInfo> entitys;
+  const BackupSheet({Key? key, this.entitys = const []}) : super(key: key);
+  final List<AppInfo?> entitys;
 
   @override
   _BackupSheetState createState() => _BackupSheetState();
@@ -124,26 +124,26 @@ class _BackupSheetState extends State<BackupSheet> {
 
 class BackupTag extends StatelessWidget {
   const BackupTag({
-    Key key,
+    Key? key,
     this.value,
     this.onChanged,
     this.title = '',
     this.accentColor,
   }) : super(key: key);
-  final bool value;
+  final bool? value;
   final String title;
-  final Color accentColor;
-  final void Function(bool value) onChanged;
+  final Color? accentColor;
+  final void Function(bool value)? onChanged;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        onChanged(!value);
+        onChanged!(!value!);
       },
       child: Container(
         decoration: BoxDecoration(
-          color: value ? accentColor : accentColor.withOpacity(0.1),
+          color: value! ? accentColor : accentColor!.withOpacity(0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         padding: const EdgeInsets.symmetric(
@@ -156,7 +156,7 @@ class BackupTag extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-            color: value ? Colors.white : accentColor,
+            color: value! ? Colors.white : accentColor,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
