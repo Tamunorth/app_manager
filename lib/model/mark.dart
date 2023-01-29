@@ -14,13 +14,11 @@ class Mark {
     this.component,
   });
 
-  factory Mark.fromJson(Map<String, dynamic>? jsonRes) => jsonRes == null
-      ? null
-      : Mark(
-          name: asT<String>(jsonRes['name']),
-          package: asT<String>(jsonRes['package']),
-          component: asT<String>(jsonRes['component']),
-        );
+  factory Mark.fromJson(Map<String, dynamic> jsonRes) => Mark(
+        name: asT<String>(jsonRes['name']),
+        package: asT<String>(jsonRes['package']),
+        component: asT<String>(jsonRes['component']),
+      );
 
   String? name;
   String? package;
@@ -37,6 +35,5 @@ class Mark {
         'component': component,
       };
 
-  Mark clone() =>
-      Mark.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
+  Mark clone() => Mark.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }

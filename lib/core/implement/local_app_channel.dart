@@ -121,6 +121,9 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<int>> getAppIconBytes(String packageName) async {
+    // TODO
+    // 应该改成返回图片的url
+    return [];
     // SocketWrapper manager =
     //     SocketWrapper(InternetAddress.anyIPv4, await getPort());
     // await manager.connect();
@@ -132,6 +135,7 @@ class LocalAppChannel implements AppChannel {
 
   @override
   Future<List<List<int>>> getAllAppIconBytes(List<String> packages) async {
+    return [];
     // SocketWrapper manager = SocketWrapper(
     //   InternetAddress.anyIPv4,
     //   await getPort(),

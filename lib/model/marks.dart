@@ -14,16 +14,12 @@ class Marks {
     this.mark,
   });
 
-  factory Marks.fromJson(Map<String, dynamic>? jsonRes) {
-    if (jsonRes == null) {
-      return null;
-    }
-
+  factory Marks.fromJson(Map<String, dynamic> jsonRes) {
     final List<Mark>? mark = jsonRes['mark'] is List ? <Mark>[] : null;
     if (mark != null) {
       for (final dynamic item in jsonRes['mark']) {
         if (item != null) {
-          mark.add(Mark.fromJson(asT<Map<String, dynamic>>(item)));
+          mark.add(Mark.fromJson(asT<Map<String, dynamic>>(item)!));
         }
       }
     }
@@ -44,5 +40,5 @@ class Marks {
       };
 
   Marks clone() =>
-      Marks.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))));
+      Marks.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this)))!);
 }

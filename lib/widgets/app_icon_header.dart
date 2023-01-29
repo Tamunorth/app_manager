@@ -15,7 +15,7 @@ class AppIconHeader extends StatefulWidget {
     Key? key,
     this.packageName,
     this.padding = const EdgeInsets.all(8.0),
-    required this.channel,
+    this.channel,
   }) : super(key: key);
   final String? packageName;
   final EdgeInsets padding;
