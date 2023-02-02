@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:app_channel/app_channel.dart';
 import 'package:app_manager/controller/icon_controller.dart';
-import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/config.dart';
 import 'package:app_manager/global/global.dart';
 import 'package:app_manager/utils/app_utils.dart';

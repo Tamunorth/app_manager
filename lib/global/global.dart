@@ -1,10 +1,10 @@
+import 'package:app_channel/app_channel.dart';
+import 'package:app_channel/implement/local_app_channel.dart';
 import 'package:app_manager/bindings/app_manager_binding.dart';
-import 'package:app_manager/core/implement/local_app_channel.dart';
-import 'package:app_manager/core/implement/remote_app_channel.dart';
-import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
+// import 'package:app_channel/app_channel.dart';
 
 import 'config.dart';
 
@@ -13,7 +13,7 @@ class Global {
 
   factory Global() => _getInstance()!;
   Global._internal() {
-    appChannel = LocalAppChannel();
+    appChannel = Get.put<AppChannel>(RemoteAppChannel());
     if (RuntimeEnvir.packageName != Config.packageName) {
       // 如果这个项目是独立运行的，那么RuntimeEnvir.packageName会在main函数中被设置成Config.packageName
       Config.flutterPackage = Config.flutterPackagePrifix;

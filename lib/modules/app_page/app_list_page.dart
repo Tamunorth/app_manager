@@ -1,6 +1,5 @@
+import 'package:app_channel/app_channel.dart';
 import 'package:app_manager/controller/app_manager_controller.dart';
-import 'package:app_manager/model/app.dart';
-import 'package:app_manager/modules/dialog/app_menu.dart';
 import 'package:app_manager/page/app_setting_page.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:app_manager/theme/app_colors.dart';
@@ -51,8 +50,7 @@ class AppListPageState extends State<AppListPage> {
       if (widget.filter != null && widget.filter.isNotEmpty) {
         // 移除不包含关键字的item
         apps.removeWhere((element) {
-          return !element.appName.toLowerCase().contains(widget.filter) &&
-              !element.packageName.toLowerCase().contains(widget.filter);
+          return !element.appName.toLowerCase().contains(widget.filter) && !element.packageName.toLowerCase().contains(widget.filter);
         });
       }
       return ListView.builder(
@@ -147,8 +145,7 @@ class _AppItemState extends State<AppItem> {
           },
           child: Listener(
             onPointerDown: (PointerDownEvent event) {
-              if (event.kind == PointerDeviceKind.mouse &&
-                  event.buttons == kSecondaryMouseButton) {
+              if (event.kind == PointerDeviceKind.mouse && event.buttons == kSecondaryMouseButton) {
                 Get.dialog(AppSettingPage(
                   entity: entity,
                   offset: offset,
@@ -221,8 +218,7 @@ class _AppItemState extends State<AppItem> {
                                     '${entity.versionName}(${entity.versionCode})',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color:
-                                          AppColors.fontColor.withOpacity(0.4),
+                                      color: AppColors.fontColor.withOpacity(0.4),
                                     ),
                                   ),
                                 ],

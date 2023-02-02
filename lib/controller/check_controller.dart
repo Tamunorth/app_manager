@@ -1,4 +1,4 @@
-import 'package:app_manager/model/app.dart';
+import 'package:app_channel/app_channel.dart';
 import 'package:get/get.dart';
 
 class CheckController extends GetxController {

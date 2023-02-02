@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:app_channel/app_channel.dart';
 import 'package:app_manager/global/global.dart';
-import 'package:app_manager/model/app.dart';
 import 'package:app_manager/theme/app_colors.dart';
 import 'package:app_manager/utils/app_utils.dart';
 import 'package:app_manager/widgets/app_icon_header.dart';
@@ -68,8 +68,7 @@ class _BackupPageState extends State<BackupPage> {
 
   Future<void> computeSpeed() async {
     // 这儿的apk可能还没有
-    limit = int.tryParse(await Global()
-                            .appChannel!.getFileSize(currentApp!.apkPath));
+    limit = int.tryParse(await Global().appChannel!.getFileSize(currentApp!.apkPath));
     current = 0;
     setState(() {});
     while (limit != current) {
@@ -131,8 +130,7 @@ class _BackupPageState extends State<BackupPage> {
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
-                                        color: AppColors.fontColor
-                                            .withOpacity(0.6),
+                                        color: AppColors.fontColor.withOpacity(0.6),
                                       ),
                                     )
                                   ],
@@ -169,8 +167,7 @@ class _BackupPageState extends State<BackupPage> {
                         );
                       }),
                       ClipRRect(
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(25.0)),
+                        borderRadius: const BorderRadius.all(Radius.circular(25.0)),
                         child: Builder(
                           builder: (context) {
                             if (allBackup) {
@@ -178,12 +175,9 @@ class _BackupPageState extends State<BackupPage> {
                             }
                             double value = current / limit!;
                             return LinearProgressIndicator(
-                              backgroundColor:
-                                  AppColors.accentColor.withOpacity(0.15),
+                              backgroundColor: AppColors.accentColor.withOpacity(0.15),
                               valueColor: AlwaysStoppedAnimation(
-                                value == 1.0
-                                    ? AppColors.accentColor
-                                    : AppColors.accentColor,
+                                value == 1.0 ? AppColors.accentColor : AppColors.accentColor,
                               ),
                               value: startBackupData ? null : value,
                             );
@@ -198,8 +192,7 @@ class _BackupPageState extends State<BackupPage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: NiCardButton(
-                color:
-                    allBackup ? AppColors.accentColor : AppColors.contentBorder,
+                color: allBackup ? AppColors.accentColor : AppColors.contentBorder,
                 borderRadius: 12,
                 onTap: () {
                   Get.back();

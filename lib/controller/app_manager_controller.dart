@@ -1,11 +1,7 @@
-import 'dart:io';
-
-import 'package:app_manager/core/interface/app_channel.dart';
+import 'package:app_channel/app_channel.dart';
 import 'package:app_manager/global/global.dart';
-import 'package:app_manager/model/app.dart';
 import 'package:app_manager/utils/app_utils.dart';
 import 'package:get/get.dart';
-import 'package:global_repository/global_repository.dart';
 
 /// pm 命令
 /// -U 显示 uid

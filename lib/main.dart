@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
 
@@ -27,7 +28,7 @@ import 'routes/app_pages.dart';
 //
 //         .............................................
 //                  佛祖保佑             永无BUG
-void main() {
+Future<void> main() async {
   RuntimeEnvir.initEnvirWithPackageName(Config.packageName);
   WidgetsFlutterBinding.ensureInitialized();
   runApp(ToastApp(
@@ -43,4 +44,6 @@ void main() {
       systemNavigationBarDividerColor: Colors.transparent,
     ),
   );
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
+  // await FlutterDisplayMode.setHighRefreshRate();
 }

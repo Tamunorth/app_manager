@@ -1,5 +1,5 @@
+import 'package:app_channel/app_channel.dart';
 import 'package:app_manager/global/global.dart';
-import 'package:app_manager/model/app.dart';
 import 'package:app_manager/controller/app_manager_controller.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:app_manager/theme/app_colors.dart';

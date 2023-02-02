@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:app_manager/global/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:global_repository/global_repository.dart';
@@ -42,8 +43,7 @@ class AppManagerEntryPoint extends StatefulWidget {
   _AppManagerEntryPointState createState() => _AppManagerEntryPointState();
 }
 
-class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
-    with SingleTickerProviderStateMixin {
+class _AppManagerEntryPointState extends State<AppManagerEntryPoint> with SingleTickerProviderStateMixin {
   AppManagerController controller = Get.find();
   int _currentIndex = 0;
   String filter = '';
@@ -52,6 +52,21 @@ class _AppManagerEntryPointState extends State<AppManagerEntryPoint>
   void initState() {
     super.initState();
     controller.init();
+    setOptimalDisplayMode();
+  }
+
+  Future<void> setOptimalDisplayMode() async {
+    final List<DisplayMode> supported = await FlutterDisplayMode.supported;
+    final DisplayMode active = await FlutterDisplayMode.active;
+
+    final List<DisplayMode> sameResolution = supported.where((DisplayMode m) => m.width == active.width && m.height == active.height).toList()
+      ..sort((DisplayMode a, DisplayMode b) => b.refreshRate.compareTo(a.refreshRate));
+
+    final DisplayMode mostOptimalMode = sameResolution.isNotEmpty ? sameResolution.first : active;
+
+    /// This setting is per session.
+    /// Please ensure this was placed with `initState` of your root widget.
+    await FlutterDisplayMode.setPreferredMode(mostOptimalMode);
   }
 
   AppManagerController appManagerProvider = Get.find();

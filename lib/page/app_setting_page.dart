@@ -1,15 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
-
 import 'package:android_intent_plus/android_intent.dart';
+import 'package:app_channel/app_channel.dart';
 import 'package:app_manager/app_manager.dart';
 import 'package:app_manager/controller/check_controller.dart';
 import 'package:app_manager/controller/mark_controller.dart';
-import 'package:app_manager/core/interface/app_channel.dart';
 import 'package:app_manager/global/global.dart';
-import 'package:app_manager/model/app.dart';
 import 'package:app_manager/controller/app_manager_controller.dart';
-import 'package:app_manager/model/app_details.dart';
 import 'package:app_manager/model/mark.dart';
 import 'package:app_manager/theme/app_colors.dart';
 import 'package:app_manager/utils/plugin_utils.dart';
@@ -47,7 +44,8 @@ class _AppSettingPageState extends State<AppSettingPage> {
     exec('dumpsys display | grep mDisplayId=').then((value) {
       Log.i(value);
     });
-    (controller.curChannel as LocalAppChannel).getDisplays().then((value) {
+    AppChannel appChannel = Get.find();
+    appChannel.getDisplays().then((value) {
       displayId = value;
       Log.i(displayId);
       setState(() {});
